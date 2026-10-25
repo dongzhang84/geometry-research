@@ -10,5 +10,5 @@ code/四面体/spheres/
 code/四面体/ortho_scan/
 code/四面体/ortho_scan_old/
 
-# 对外联系记录：含记者邮箱与联系状态，只留在本地
+# 对外联系记录已移入 physcert/reachout/（私有仓库）；这里不再放
 docs/outreach.md
