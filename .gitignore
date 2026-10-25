@@ -9,3 +9,6 @@ code/四面体/spheres/
 # 垂心四面体扫描：新代码与中间结果，只留在本地（报告在 docs/）
 code/四面体/ortho_scan/
 code/四面体/ortho_scan_old/
+
+# 对外联系记录：含记者邮箱与联系状态，只留在本地
+docs/outreach.md
