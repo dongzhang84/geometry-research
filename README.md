@@ -1,6 +1,11 @@
-# Geometry Atlas · 几何图谱
+# Geometry Research · 几何定理研究
 
 > **在线访问：<https://geometry-atlas.vercel.app/>**　·　专题页：[九点圆和其它相关定理](https://geometry-atlas.vercel.app/explore/nine-point.html)
+
+> 本仓库 2026-10-26 由 `geometry-atlas` 改名为 `geometry-research`，名实相符：这里是
+> 研究仓库（定理地图、扫描代码、长文和草稿）。`geometry-atlas` 这个名字留给另一个
+> 面向读者的公开项目。旧的 GitHub 地址会一直重定向到这里，直到那个新仓库建起来为止。
+> 线上地址 `geometry-atlas.vercel.app` 来自 Vercel 的项目名，不随仓库改名而变。
 
 三本经典几何书中的约 300 条定理，按「几何层次 → 大类 → 小类 → 定理」排成一张可以点开、筛选、搜索的环形地图。
 
@@ -173,7 +178,7 @@ npx serve .
 
 ## 部署
 
-线上地址：<https://geometry-atlas.vercel.app/>，由 Vercel 从 GitHub 仓库的 `main` 分支部署，推送后自动更新。纯静态站点，不需要构建：Framework Preset 选 Other，不填 Build Command。
+线上地址：<https://geometry-atlas.vercel.app/>，由 Vercel 从 GitHub 仓库 `dongzhang84/geometry-research` 的 `main` 分支部署，推送后自动更新。地址里的 `geometry-atlas` 是 Vercel 的项目名，和仓库名无关。纯静态站点，不需要构建：Framework Preset 选 Other，不填 Build Command。
 
 需要手动发布时，在仓库根目录运行 `npx vercel --prod`。
 
