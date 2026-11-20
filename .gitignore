@@ -15,3 +15,8 @@ docs/outreach.md
 
 # 翻拍的书页（受版权保护，且体积大），只留在本地
 geometry_of_remarkable_elements/
+
+# 棱切球四面体扫描：代码与中间结果只留在本地（csph_raw_1490.pkl 有 358 MB）；证明脚本 proofs/ 入库
+code/四面体/circ_scan/*
+!code/四面体/circ_scan/proofs/
+code/四面体/circ_scan/proofs/**/__pycache__/
