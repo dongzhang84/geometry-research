@@ -18,7 +18,6 @@ public import GeometryResearch.Orthocentric.Defs
 
 set_option linter.unusedSimpArgs false
 set_option linter.unusedTactic false
-set_option linter.flexible false
 
 open EuclideanGeometry
 open scoped RealInnerProductSpace
@@ -118,6 +117,7 @@ theorem pt_sub_H (i : Fin 4) :
   rw [← H_sub_O]; simp [u]
 
 /-- 论文第 2 节：⟪Vᵢ − H, Vⱼ − H⟫（i ≠ j）都等于 p。 -/
+set_option linter.flexible false in
 theorem inner_pt_H (ho : IsOrthocentric t) {i j : Fin 4} (hij : i ≠ j) :
     ⟪t.points i - H t, t.points j - H t⟫ = p t := by
   obtain ⟨h02, h03, h12, h13, h23⟩ := Alg.pair_eq (hyp t ho)
