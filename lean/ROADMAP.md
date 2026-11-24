@@ -4,7 +4,7 @@
 
 | 论文 | Zenodo | 状态 |
 |---|---|---|
-| A Seven-Point Sphere of the Tetrahedron | 10.5281/zenodo.23572917 | **试点，进行中** |
+| A Seven-Point Sphere of the Tetrahedron | 10.5281/zenodo.23572917 | **主定理已完整证明**（阶段 1、2 完成；阶段 3 推论未做） |
 | Five Theorems on the Orthocentric Tetrahedron | 10.5281/zenodo.23579462 | 未开始 |
 | Eleven Theorems on the Tetrahedron with a Midsphere | zenodo.org/records/24478275 | 未开始 |
 
@@ -51,7 +51,7 @@ lean/
 | 6 | D | 4G − 3O | `AffineMap.homothety O 4 G` |
 | 7 | F | 4O′ − 3O | `AffineMap.homothety O 4 O′` |
 
-### 阶段 1：搭环境 + 写形式陈述（证明用 `sorry`）
+### 阶段 1：搭环境 + 写形式陈述（证明用 `sorry`）　✅ 2026-11-24 完成
 
 **1A. 环境**
 
@@ -93,7 +93,7 @@ lean/
 5. `lake build` 的输出：只应有 `sorry` 警告，没有错误。
 6. 对阶段 2 的预估：哪些引理 Mathlib 已有，哪些要自己证，哪一步最难。
 
-### 阶段 2：证明主定理
+### 阶段 2：证明主定理　✅ 2026-11-24 完成，见 `GeometryResearch/SevenPoint/汇报_阶段2.md`
 
 按论文第 2 节的证明翻译，分三层：
 

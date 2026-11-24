@@ -1,18 +1,15 @@
 module
 
-public import Mathlib
+public import GeometryResearch.SevenPoint.Defs
+public import GeometryResearch.SevenPoint.Algebra
+public import GeometryResearch.SevenPoint.Geometry
 
 /-!
-# 七点球定理：形式陈述（阶段 1）
+# 七点球定理：形式陈述与证明
 
 论文：D. Zhang, *A Seven-Point Sphere of the Tetrahedron*, Zenodo 10.5281/zenodo.23572917，
-Theorem 1（`docs/seven-point-sphere/seven_point_sphere.tex` 第 2 节）。
-
-本文件只写定义和陈述；所有定理的**证明**暂时是 `sorry`，定义里没有 `sorry`。
-
-空间取 `EuclideanSpace ℝ (Fin 3)`，点和向量是同一个类型。四面体是
-`t : Affine.Simplex ℝ (EuclideanSpace ℝ (Fin 3)) 3`，顶点 `t.points 0, …, t.points 3`
-即论文的 V₀, …, V₃，取定顶点 V₀。
+Theorem 1。定义见 `Defs.lean`（阶段 1 审过的定义原样移入），代数核心见 `Algebra.lean`，
+Mathlib 定义到向量公式的展开见 `Geometry.lean`。
 -/
 
 @[expose] public noncomputable section
@@ -22,88 +19,65 @@ open scoped RealInnerProductSpace
 
 namespace GeometryResearch.SevenPoint
 
-/-- 三维欧氏空间。 -/
-abbrev E3 := EuclideanSpace ℝ (Fin 3)
-
 variable (t : Affine.Simplex ℝ E3 3)
 
-/-! ## 基本对象 -/
-
-/-- 外心 O。 -/
-def O : E3 := t.circumcenter
-
-/-- 外接球半径 R。 -/
-def R : ℝ := t.circumradius
-
-/-- 重心 G（四个顶点的平均）。 -/
-def G : E3 := Finset.univ.centroid ℝ t.points
-
-/-- 取定的顶点 V₀。 -/
-def V₀ : E3 := t.points 0
-
-/-- V₀ 的对面 V₁V₂V₃（作为三角形）。`faceOpposite 0` 的第 j 个顶点是 `t.points (j+1)`。 -/
-def face : Affine.Triangle ℝ E3 := t.faceOpposite 0
-
-/-- 对面所在的平面。 -/
-def facePlane : AffineSubspace ℝ E3 := affineSpan ℝ (Set.range (face t).points)
-
-instance : Nonempty (facePlane t) :=
-  ⟨⟨(face t).points 0, mem_affineSpan ℝ (Set.mem_range_self 0)⟩⟩
-
-/-- 对面的外心 O′。 -/
-def O' : E3 := (face t).circumcenter
-
-/-! ## 七个点（论文 Table 1） -/
-
-/-- 表 1 第 1 行：A，直线 V₀G 与外接球的第二个交点。 -/
-def pointA : E3 := t.circumsphere.secondInter (V₀ t) (G t -ᵥ V₀ t)
-
-/-- 表 1 第 2 行：B，对面所在平面关于外接球的极点（Mathlib 的 `Sphere.pole`：
-球心在平面上的正交投影关于外接球的反演，即论文的 inv(O′)）。 -/
-def pointB : E3 := t.circumsphere.pole (facePlane t)
-
-/-- 表 1 第 3 行：C = 4G − 3V₀，即以 G 为中心、比 −3 的位似下 V₀ 的像（反补四面体的顶点）。 -/
-def pointC : E3 := AffineMap.homothety (G t) (-3 : ℝ) (V₀ t)
-
-/-- 表 1 第 4 行：H′，对面三角形的垂心（Mathlib 定义为三角形的 Monge 点）。 -/
-def pointH' : E3 := (face t).orthocenter
-
-/-- 表 1 第 5 行：E，G 关于外接球的反演点。 -/
-def pointE : E3 := inversion (O t) (R t) (G t)
-
-/-- 表 1 第 6 行：D = 4G − 3O，以 O 为中心、比 4 的位似下 G 的像。 -/
-def pointD : E3 := AffineMap.homothety (O t) (4 : ℝ) (G t)
-
-/-- 表 1 第 7 行：F = 4O′ − 3O，以 O 为中心、比 4 的位似下 O′ 的像。 -/
-def pointF : E3 := AffineMap.homothety (O t) (4 : ℝ) (O' t)
-
-/-- 七个点，顺序同论文表 1：A, B, C, H′, E, D, F。 -/
-def sevenPoints : Fin 7 → E3 :=
-  ![pointA t, pointB t, pointC t, pointH' t, pointE t, pointD t, pointF t]
-
-/-- 球 s 与球 S(O, 2R) 正交：两球心距离的平方等于两半径平方之和。 -/
-def OrthogonalToBigSphere (s : Sphere E3) : Prop :=
-  dist s.center (O t) ^ 2 = s.radius ^ 2 + (2 * R t) ^ 2
+open _root_.GeometryResearch.SevenPoint.Algebra in
+/-- 三个方程成立时，七个点（相对 O 的向量）都在 Σ(α, c) 上。 -/
+theorem all_onSphere {α : ℝ} {c : E3} (h : Eqs (R t) α (v₀ t) (g t) (p t) c)
+    (hG : G t ≠ O t) (hO' : O' t ≠ O t) (i : Fin 7) :
+    OnSphere (R t) α c (sevenPoints t i - O t) := by
+  have hg : g t ≠ 0 := sub_ne_zero.mpr hG
+  have hp : p t ≠ 0 := sub_ne_zero.mpr hO'
+  fin_cases i
+  · change OnSphere (R t) α c (pointA t - O t); rw [pointA_sub]; exact onSphere_A h (inner_v₀ t)
+  · change OnSphere (R t) α c (pointB t - O t); rw [pointB_sub]; exact onSphere_B h hp
+  · change OnSphere (R t) α c (pointC t - O t); rw [pointC_sub]; exact onSphere_C h (inner_v₀ t)
+  · change OnSphere (R t) α c (pointH' t - O t); rw [pointH'_sub]
+    exact onSphere_H h (inner_v₀ t) (inner_s_p t)
+  · change OnSphere (R t) α c (pointE t - O t); rw [pointE_sub]; exact onSphere_E h hg
+  · change OnSphere (R t) α c (pointD t - O t); rw [pointD_sub]; exact onSphere_D h
+  · change OnSphere (R t) α c (pointF t - O t); rw [pointF_sub]; exact onSphere_F h
 
 /-! ## 忠实性引理：检查 A、B 的定义就是论文里的点 -/
 
 /-- A 在外接球上。 -/
-theorem pointA_mem_circumsphere : pointA t ∈ t.circumsphere := by
-  sorry
+theorem pointA_mem_circumsphere : pointA t ∈ t.circumsphere :=
+  (Sphere.secondInter_mem _).mpr (t.mem_circumsphere 0)
 
 /-- A 在直线 V₀G 上。 -/
-theorem pointA_mem_line : pointA t ∈ line[ℝ, V₀ t, G t] := by
-  sorry
+theorem pointA_mem_line : pointA t ∈ line[ℝ, V₀ t, G t] :=
+  Sphere.secondInter_vsub_mem_affineSpan _ _ _
 
 /-- A 不是 V₀（直线 V₀G 与外接球确有第二个交点）。 -/
 theorem pointA_ne_V₀ : pointA t ≠ V₀ t := by
-  sorry
+  intro h
+  rw [pointA, Sphere.secondInter_eq_self_iff, t.circumsphere_center] at h
+  have h' : ⟪g t - v₀ t, v₀ t⟫ = 0 := by
+    have e1 : G t -ᵥ V₀ t = g t - v₀ t := by simp [g, v₀]
+    rw [e1] at h; exact h
+  exact (inner_g_sub_v₀_neg t).ne h'
 
 /-- 极点引理：若 O′ ≠ O，对面所在平面上的任意点 X 都满足 ⟪X − O, B − O⟫ = R²，
 即 B 确实是该平面关于外接球的极点（与 O′ 不同方向的退化情形被排除）。 -/
 theorem inner_pointB (hO' : O' t ≠ O t) {X : E3} (hX : X ∈ facePlane t) :
     ⟪X -ᵥ O t, pointB t -ᵥ O t⟫ = R t ^ 2 := by
-  sorry
+  have hp : p t ≠ 0 := sub_ne_zero.mpr hO'
+  have hpp : ⟪p t, p t⟫ ≠ 0 := by
+    rwa [real_inner_self_eq_norm_sq, pow_ne_zero_iff two_ne_zero, norm_ne_zero_iff]
+  -- X − O′ 在平面的方向里，O − O′ 与之垂直
+  have hmem := vsub_orthogonalProjection_mem_direction_orthogonal (facePlane t) (O t)
+  rw [orthogonalProjection_O, vsub_eq_sub] at hmem
+  have hdir : X - O' t ∈ (facePlane t).direction := by
+    rw [← vsub_eq_sub]
+    apply AffineSubspace.vsub_mem_direction hX
+    rw [← orthogonalProjection_O]; exact (orthogonalProjection (facePlane t) (O t)).property
+  have h0 : ⟪X - O' t, O t - O' t⟫ = 0 := Submodule.inner_right_of_mem_orthogonal hdir hmem
+  have hXp : ⟪X - O t, p t⟫ = ⟪p t, p t⟫ := by
+    rw [show X - O t = (X - O' t) + p t by simp [p], inner_add_left,
+      show p t = -(O t - O' t) by simp [p], inner_neg_right, h0]
+    simp
+  rw [vsub_eq_sub, vsub_eq_sub, pointB_sub, real_inner_smul_right, hXp]
+  field_simp
 
 /-! ## 主定理 -/
 
@@ -114,20 +88,114 @@ theorem mobius_sphere (hG : G t ≠ O t) (hO' : O' t ≠ O t) :
     ∃ (α : ℝ) (c : E3), (α ≠ 0 ∨ c ≠ 0) ∧
       ∀ i, α * ‖sevenPoints t i -ᵥ O t‖ ^ 2 - 2 * ⟪c, sevenPoints t i -ᵥ O t⟫
         + 4 * α * R t ^ 2 = 0 := by
-  sorry
+  obtain ⟨α, c, hne, h⟩ := Algebra.exists_eqs finrank_euclideanSpace_fin (R t) (v₀ t) (g t) (p t)
+  refine ⟨α, c, hne, fun i => ?_⟩
+  have := all_onSphere t h hG hO' i
+  unfold Algebra.OnSphere at this
+  rwa [real_inner_self_eq_norm_sq] at this
 
 /-- 主定理，非退化形式：若 O、G、O′、V₀ 不共面，则存在一个球 s，七个点都在 s 上，
 s 与 S(O, 2R) 正交；并且在与 S(O, 2R) 正交的球中，经过这七个点的只有 s 一个。 -/
 theorem seven_point_sphere (h : AffineIndependent ℝ ![O t, G t, O' t, V₀ t]) :
     ∃ s : Sphere E3, (∀ i, sevenPoints t i ∈ s) ∧ OrthogonalToBigSphere t s ∧
       ∀ s' : Sphere E3, (∀ i, sevenPoints t i ∈ s') → OrthogonalToBigSphere t s' → s' = s := by
-  sorry
+  -- 不共面蕴含 G ≠ O、O′ ≠ O
+  have hG : G t ≠ O t := h.injective.ne (by decide : (1 : Fin 4) ≠ 0)
+  have hO' : O' t ≠ O t := h.injective.ne (by decide : (2 : Fin 4) ≠ 0)
+  have hg : g t ≠ 0 := sub_ne_zero.mpr hG
+  have hp : p t ≠ 0 := sub_ne_zero.mpr hO'
+  have hR : R t ≠ 0 := (R_pos t).ne'
+  -- 取三个方程的非零解；不共面时 α ≠ 0，归一化为 α = 1
+  obtain ⟨α, c, hne, hE⟩ := Algebra.exists_eqs finrank_euclideanSpace_fin (R t) (v₀ t) (g t) (p t)
+  have hα : α ≠ 0 := by
+    rintro rfl
+    have hc : c = 0 := eq_zero_of_inner t h
+      (by linarith [hE.eqG]) (by linarith [hE.eqP]) (by linarith [hE.eqV])
+    exact hne.elim (fun h0 => h0 rfl) (fun h0 => h0 hc)
+  set c₁ := α⁻¹ • c with hc₁
+  have hE1 : Algebra.Eqs (R t) 1 (v₀ t) (g t) (p t) c₁ := hE.normalize hα
+  -- α = 1 时：X 在 Σ(1, c₁) 上 ⇔ ‖x − c₁‖² = ‖c₁‖² − 4R²（x = X − O）
+  have key : ∀ x : E3, Algebra.OnSphere (R t) 1 c₁ x →
+      ‖x - c₁‖ ^ 2 = ‖c₁‖ ^ 2 - 4 * R t ^ 2 := by
+    intro x hx
+    unfold Algebra.OnSphere at hx
+    rw [@norm_sub_sq_real, ← real_inner_self_eq_norm_sq x, real_inner_comm c₁ x]
+    linarith
+  have hon := all_onSphere t hE1 hG hO'
+  set ctr : E3 := c₁ + O t with hctr
+  set rad : ℝ := ‖(pointA t - O t) - c₁‖ with hrad
+  have hdist : ∀ X : E3, dist X ctr = ‖(X - O t) - c₁‖ := by
+    intro X; rw [dist_eq_norm, hctr]; congr 1; abel
+  have hradsq : rad ^ 2 = ‖c₁‖ ^ 2 - 4 * R t ^ 2 := key _ (hon 0)
+  refine ⟨⟨ctr, rad⟩, ?_, ?_, ?_⟩
+  · -- 七个点都在球上
+    intro i
+    rw [EuclideanGeometry.mem_sphere, hdist]
+    change ‖(sevenPoints t i - O t) - c₁‖ = rad
+    have h1 := key _ (hon i)
+    rw [← hradsq] at h1
+    exact (sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _)).mp h1
+  · -- 与 S(O, 2R) 正交
+    change dist ctr (O t) ^ 2 = rad ^ 2 + (2 * R t) ^ 2
+    rw [hradsq, dist_eq_norm, hctr, add_sub_cancel_right]
+    ring
+  · -- 唯一性
+    intro s' hs' hort
+    set c' := s'.center - O t with hc'
+    -- s' 上的点都在 Σ(1, c') 上
+    have hon' : ∀ i, Algebra.OnSphere (R t) 1 c' (sevenPoints t i - O t) := by
+      intro i
+      have hmem := hs' i
+      rw [EuclideanGeometry.mem_sphere, dist_eq_norm] at hmem
+      have hx : ‖(sevenPoints t i - O t) - c'‖ = s'.radius := by
+        rw [← hmem, hc']; congr 1; abel
+      unfold OrthogonalToBigSphere at hort
+      rw [dist_eq_norm] at hort
+      unfold Algebra.OnSphere
+      have e := congrArg (· ^ 2) hx
+      rw [@norm_sub_sq_real, ← real_inner_self_eq_norm_sq (sevenPoints t i - O t),
+        real_inner_comm c' (sevenPoints t i - O t)] at e
+      rw [← hc'] at hort
+      nlinarith [e, hort]
+    -- 由 E、B、C 三点反推出三个方程
+    have hE4 := hon' 4
+    have hB1 := hon' 1
+    have hC2 := hon' 2
+    change Algebra.OnSphere _ _ _ (pointE t - O t) at hE4
+    change Algebra.OnSphere _ _ _ (pointB t - O t) at hB1
+    change Algebra.OnSphere _ _ _ (pointC t - O t) at hC2
+    rw [pointE_sub] at hE4
+    rw [pointB_sub] at hB1
+    rw [pointC_sub] at hC2
+    have eG := Algebra.eqG_of_onSphere_E hg hR hE4
+    have eP := Algebra.eqP_of_onSphere_B hp hR hB1
+    have eV := Algebra.eqV_of_onSphere_C eG (inner_v₀ t) hC2
+    -- c′ 与 c₁ 满足同样的三个方程，差与 g、p、v₀ 都垂直，所以相等
+    have hcc : c' = c₁ := by
+      have hd := eq_zero_of_inner t h (c := c' - c₁)
+        (by rw [inner_sub_left]; linarith [hE1.eqG, eG])
+        (by rw [inner_sub_left]; linarith [hE1.eqP, eP])
+        (by rw [inner_sub_left]; linarith [hE1.eqV, eV])
+      exact sub_eq_zero.mp hd
+    have hcenter : s'.center = ctr := by
+      rw [hctr, ← hcc, hc']; abel
+    have hradius : s'.radius = rad := by
+      have hmem := hs' 0
+      rw [EuclideanGeometry.mem_sphere, hcenter, hdist] at hmem
+      exact hmem.symm
+    exact EuclideanGeometry.Sphere.ext hcenter hradius
 
 /-- 平面形式：若 G ≠ O、O′ ≠ O，且 O、G、O′、V₀ 共面，则七个点在一个过 O 的平面上，
 即存在非零向量 c，使七个点 X 都满足 ⟪c, X − O⟫ = 0。 -/
 theorem seven_point_plane (hG : G t ≠ O t) (hO' : O' t ≠ O t)
     (h : ¬ AffineIndependent ℝ ![O t, G t, O' t, V₀ t]) :
     ∃ c : E3, c ≠ 0 ∧ ∀ i, ⟪c, sevenPoints t i -ᵥ O t⟫ = 0 := by
-  sorry
+  obtain ⟨c, hc0, h1, h2, h3⟩ := exists_orth t h
+  have hE : Algebra.Eqs (R t) 0 (v₀ t) (g t) (p t) c := ⟨by simp [h1], by simp [h2], by simp [h3]⟩
+  refine ⟨c, hc0, fun i => ?_⟩
+  have := all_onSphere t hE hG hO' i
+  unfold Algebra.OnSphere at this
+  rw [vsub_eq_sub]
+  linarith
 
 end GeometryResearch.SevenPoint

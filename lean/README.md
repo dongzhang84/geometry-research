@@ -43,8 +43,11 @@ lake build
 GeometryResearch.lean              库入口，import 下面各文件
 GeometryResearch/Smoke.lean        冒烟测试：‖x + y‖² = ‖x‖² + 2⟪x, y⟫ + ‖y‖²
 GeometryResearch/SevenPoint/
-  Statement.lean                   七点球定理的形式陈述（证明待完成）
-  汇报_阶段1.md                     阶段 1 汇报
+  Defs.lean                        定义：四面体的基本对象和七个点
+  Algebra.lean                     代数核心（只用内积和向量）
+  Geometry.lean                    Mathlib 定义到向量公式的展开
+  Statement.lean                   七个定理的陈述和证明
+  汇报_阶段1.md、汇报_阶段2.md       阶段汇报
 GeometryResearch/Basic.lean        模板自带的空文件
 ```
 
@@ -54,7 +57,7 @@ GeometryResearch/Basic.lean        模板自带的空文件
 lake build
 ```
 
-当前应输出 7 条 `declaration uses 'sorry'` 警告（七点球的 7 个待证定理），没有错误。
+应当零错误、零警告。七点球的七个定理都已证明，`#print axioms` 只显示 `propext`、`Classical.choice`、`Quot.sound` 三条标准公理。
 
 ## 配置说明
 
