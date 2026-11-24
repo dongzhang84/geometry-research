@@ -1,3 +1,4 @@
 import GeometryResearch.Basic
 import GeometryResearch.Smoke
 import GeometryResearch.SevenPoint.Statement
+import GeometryResearch.Orthocentric.Statement
