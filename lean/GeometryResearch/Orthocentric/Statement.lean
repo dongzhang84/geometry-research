@@ -2,6 +2,7 @@ module
 
 public import GeometryResearch.Orthocentric.Defs
 public import GeometryResearch.Orthocentric.Model
+public import GeometryResearch.Orthocentric.Thirteen
 
 /-!
 # 垂心四面体五定理：形式陈述（阶段 1）
@@ -118,12 +119,32 @@ theorem S2_eq (i : Fin 4) :
       dist ((t.faceOpposite i).points 0) ((t.faceOpposite i).points 2) *
       Real.sin (∠ ((t.faceOpposite i).points 1) ((t.faceOpposite i).points 0)
         ((t.faceOpposite i).points 2))) ^ 2 := by
-  sorry
+  set P := (t.faceOpposite i).points
+  have key := InnerProductGeometry.sin_angle_mul_norm_mul_norm (P 1 - P 0) (P 2 - P 0)
+  have hcs := real_inner_mul_inner_self_le (P 1 - P 0) (P 2 - P 0)
+  rw [EuclideanGeometry.angle, dist_comm (P 0) (P 1), dist_comm (P 0) (P 2), dist_eq_norm,
+    dist_eq_norm]
+  simp only [vsub_eq_sub]
+  rw [show ∀ a b c : ℝ, (1 / 2 * a * b * c) ^ 2 = (1 / 2) ^ 2 * (c * (a * b)) ^ 2 by
+    intros; ring, key, Real.sq_sqrt (by linarith), real_inner_self_eq_norm_sq,
+    real_inner_self_eq_norm_sq]
+  simp only [S2, P]
+  ring
 
+set_option linter.flexible false in
 /-- 中点球（论文 Lemma 2.1(d)）：六条棱的中点到 G 的距离都等于 `rMid`。 -/
 theorem dist_mid_G (ho : IsOrthocentric t) {i j : Fin 4} (hij : i ≠ j) :
     dist (mid t i j) (G t) = rMid t := by
-  sorry
+  obtain ⟨h02, h03, h12, h13, h23⟩ := Alg.mid_eq (hyp t ho)
+  have key : ∀ a b : Fin 4, a < b → dist (mid t a b) (G t) = rMid t := by
+    intro a b hab
+    rw [rMid, dist_eq_norm, dist_eq_norm, mid_sub_G, mid_sub_G]
+    fin_cases a <;> fin_cases b <;> simp at hab ⊢ <;>
+      rw [← sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _), ← real_inner_self_eq_norm_sq,
+        ← real_inner_self_eq_norm_sq] <;> assumption
+  rcases lt_or_gt_of_ne hij with h | h
+  · exact key i j h
+  · rw [mid, midpoint_comm]; exact key j i h
 
 /-! ## 定理 1：十三点球 -/
 
@@ -139,8 +160,8 @@ theorem thirteen_point_sphere (ho : IsOrthocentric t) (hH : ∀ j, H t ≠ t.poi
     ψ t (Gface t i) ∈ s ∧
     midpoint ℝ (H t) (AffineMap.homothety (O t) (-1 : ℝ) (t.points i)) ∈ s ∧
     midpoint ℝ (H t) ((Ω t).secondInter (t.points i) (H t -ᵥ t.points i)) ∈ s ∧
-    s.power (H t) = 3 / 2 * p t := by
-  sorry
+    s.power (H t) = 3 / 2 * p t :=
+  thirteen_main t ho hH i s hV hN
 
 /-- 经过 Vᵢ 和对面九点圆的球存在（所以定理 1 不是空的）。 -/
 theorem exists_sphere_thirteen (i : Fin 4) :
