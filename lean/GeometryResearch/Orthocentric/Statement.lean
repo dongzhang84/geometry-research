@@ -100,7 +100,7 @@ theorem bary_ofWeights (w : Fin 4 → ℝ) (hw : ∑ j, w j ≠ 0) (i : Fin 4) :
   rw [← hb]
   exact (basis t).coord_apply_combination_of_mem (Finset.mem_univ i) hsum
 
-/-- Fermat 点存在（所以定理 5 不是空的）。 -/
+/-- Fermat 点存在。（只保证最小化点存在，不保证定理 5 的其余假设能同时满足；后者由数值例子支持。） -/
 theorem exists_fermatPoint : ∃ F, IsFermatPoint t F := by
   have hc : Continuous (fun Y : E3 => ∑ i, dist Y (t.points i)) := by fun_prop
   have hlim : Filter.Tendsto (fun Y : E3 => ∑ i, dist Y (t.points i))
@@ -111,6 +111,19 @@ theorem exists_fermatPoint : ∃ F, IsFermatPoint t F := by
       (tendsto_dist_right_cocompact_atTop (t.points 0))
   obtain ⟨F, hF⟩ := hc.exists_forall_le hlim
   exact ⟨F, hF⟩
+
+/-- `S2 i` 确实是面 i 面积的平方：(½·|PQ|·|PR|·sin∠QPR)²，P、Q、R 为面 i 的三个顶点。 -/
+theorem S2_eq (i : Fin 4) :
+    S2 t i = (1 / 2 * dist ((t.faceOpposite i).points 0) ((t.faceOpposite i).points 1) *
+      dist ((t.faceOpposite i).points 0) ((t.faceOpposite i).points 2) *
+      Real.sin (∠ ((t.faceOpposite i).points 1) ((t.faceOpposite i).points 0)
+        ((t.faceOpposite i).points 2))) ^ 2 := by
+  sorry
+
+/-- 中点球（论文 Lemma 2.1(d)）：六条棱的中点到 G 的距离都等于 `rMid`。 -/
+theorem dist_mid_G (ho : IsOrthocentric t) {i j : Fin 4} (hij : i ≠ j) :
+    dist (mid t i j) (G t) = rMid t := by
+  sorry
 
 /-! ## 定理 1：十三点球 -/
 
@@ -216,21 +229,22 @@ def Apt (i : Fin 4) : E3 := ψ t (Gface t i)
 /-- Bᵢ：直线 VᵢG 与外接球的第二个交点。 -/
 def Bpt (i : Fin 4) : E3 := (Ω t).secondInter (t.points i) (G t -ᵥ t.points i)
 
-/-- 定理 4（七线共点），四条弦 AᵢBᵢ 部分：X 在直线 AᵢBᵢ 上，且 ⟪XAᵢ, XBᵢ⟫ = X 对外接球的幂。
-假设 ψ 在用到的点上有定义：H 不是顶点，且 Gᵢ ≠ H。 -/
-theorem seven_lines_chord (ho : IsOrthocentric t) (hH : ∀ j, H t ≠ t.points j)
-    (hG : ∀ j, Gface t j ≠ H t) (i : Fin 4) :
-    Xpt t ∈ line[ℝ, Apt t i, Bpt t i] ∧
+/-- 定理 4（七线共点），四条弦 AᵢBᵢ 部分。Aᵢ ≠ Bᵢ 时 X 在直线 AᵢBᵢ 上；Aᵢ = Bᵢ 时
+（论文：直线 AᵢBᵢ 读作外接球在该点的切线）X 在外接球过该点的切平面上。两种情形都有
+⟪XAᵢ, XBᵢ⟫ = X 对外接球的幂。唯一的假设是论文的「H 不是顶点」（由它可推出 Gᵢ ≠ H，ψ(Gᵢ) 有定义）。 -/
+theorem seven_lines_chord (ho : IsOrthocentric t) (hH : ∀ j, H t ≠ t.points j) (i : Fin 4) :
+    (Apt t i ≠ Bpt t i → Xpt t ∈ line[ℝ, Apt t i, Bpt t i]) ∧
+      (Apt t i = Bpt t i → ⟪Xpt t - Apt t i, Apt t i - O t⟫ = 0) ∧
       ⟪Apt t i - Xpt t, Bpt t i - Xpt t⟫ = (Ω t).power (Xpt t) := by
   sorry
 
-/-- 定理 4（七线共点），三条直线 ψ(mᵢⱼ)ψ(mₖₗ) 部分（{i, j}、{k, l} 是一对对棱）：X 在这条直线上，
-且 ⟪Xψ(mᵢⱼ), Xψ(mₖₗ)⟫ = X 对中点球的幂。假设 H 不是顶点，且棱中点都不等于 H。 -/
+/-- 定理 4（七线共点），三条直线 ψ(mᵢⱼ)ψ(mₖₗ) 部分（{i, j}、{k, l} 是一对对棱）：
+ψ(mᵢⱼ) ≠ ψ(mₖₗ)（直线不退化），X 在这条直线上，且 ⟪Xψ(mᵢⱼ), Xψ(mₖₗ)⟫ = X 对中点球的幂。
+唯一的假设是「H 不是顶点」（由它可推出棱中点都不等于 H，ψ(mᵢⱼ) 有定义）。 -/
 theorem seven_lines_midpoint (ho : IsOrthocentric t) (hH : ∀ j, H t ≠ t.points j)
-    (hm : ∀ a b, a ≠ b → mid t a b ≠ H t)
     {i j k l : Fin 4} (hij : i ≠ j) (hik : i ≠ k) (hil : i ≠ l) (hjk : j ≠ k) (hjl : j ≠ l)
     (hkl : k ≠ l) :
-    Xpt t ∈ line[ℝ, ψ t (mid t i j), ψ t (mid t k l)] ∧
+    ψ t (mid t i j) ≠ ψ t (mid t k l) ∧ Xpt t ∈ line[ℝ, ψ t (mid t i j), ψ t (mid t k l)] ∧
       ⟪ψ t (mid t i j) - Xpt t, ψ t (mid t k l) - Xpt t⟫ = powMid t (Xpt t) := by
   sorry
 

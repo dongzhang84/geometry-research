@@ -1,5 +1,5 @@
 # 按 Mathlib / Defs.lean 的定义逐字计算，数值检验 Orthocentric/Statement.lean 的陈述
-from mpmath import mp, matrix, mpf, sqrt, lu_solve, eigsy
+from mpmath import mp, matrix, mpf, sqrt, lu_solve, eigsy, acos, sin
 import random, itertools
 mp.dps=40
 dot=lambda a,b: sum(a[i]*b[i] for i in range(3)); norm=lambda a: sqrt(dot(a,a))
@@ -71,6 +71,12 @@ def run(V,bad=None,verbose=True):
     out['a=|HV|²−p']=max(float(abs(t.a(i)-(dot(V[i]-t.H,V[i]-t.H)-t.p))) for i in range(4))
     out['ψ(Vᵢ)=Hᵢ']=max(float(norm(t.psi(V[i])-t.Hf(i))) for i in range(4))
     w=[mpf(1.3),mpf(-0.4),mpf(2.2),mpf(0.7)]; out['bary∘ofWeights']=float(max(abs(t.bary(t.ofW(w))[i]-w[i]/sum(w)) for i in range(4)))
+    def S2ang(i):                                                   # (½·|PQ|·|PR|·sin∠QPR)²
+        F=t.face(i); u=F[1]-F[0]; w=F[2]-F[0]; th=acos(dot(u,w)/(norm(u)*norm(w)))
+        return (norm(u)*norm(w)*sin(th)/2)**2
+    out['S2 = 面积²']=max(float(abs(t.S2(i)-S2ang(i))) for i in range(4))
+    rM=norm(mid(V[0],V[1])-t.G)
+    out['棱中点到 G 等距']=max(float(abs(norm(mid(V[i],V[j])-t.G)-rM)) for i in range(4) for j in range(4) if i!=j)
     # 定理 1
     e1=0
     for i in range(4):
@@ -101,10 +107,13 @@ def run(V,bad=None,verbose=True):
     for i in range(4):
         A=t.psi(t.Gf(i)); B=secondInter(t.O,V[i],t.G-V[i])
         e4=max(e4,online(X,A,B),float(abs(dot(A-X,B-X)-powO)))
+        out.setdefault('min|AᵢBᵢ|',1e9); out['min|AᵢBᵢ|']=min(out['min|AᵢBᵢ|'],float(norm(A-B)))
     for (i,j,k,l) in itertools.permutations(range(4)):
         A=t.psi(mid(V[i],V[j])); B=t.psi(mid(V[k],V[l]))
         e4=max(e4,online(X,A,B),float(abs(dot(A-X,B-X)-powM)))
+        out.setdefault('min|ψ(mᵢⱼ)ψ(mₖₗ)|',1e9); out['min|ψ(mᵢⱼ)ψ(mₖₗ)|']=min(out['min|ψ(mᵢⱼ)ψ(mₖₗ)|'],float(norm(A-B)))
     out['定理4 七线共点']=e4
+    out['min|GᵢH|, min|mᵢⱼH|']=float(min([norm(t.Gf(i)-t.H) for i in range(4)]+[norm(mid(V[i],V[j])-t.H) for i in range(4) for j in range(i+1,4)]))
     # 定理 5：Weiszfeld 求 Fermat 点
     Fp=t.G
     for _ in range(3000):
@@ -121,7 +130,7 @@ for trial in range(3):
 print('\n--- 一个 aᵢ 为负（H 在外部）---')
 for a in ([-0.4,1.5,2.0,1.2],[1.1,-0.3,0.9,2.5]):
     try:
-        o=run(ortho_tet(a)); print('a =',a,' 最大误差 %.1e'%max(o.values()))
+        o=run(ortho_tet(a)); print('a =',a,' 最大误差 %.1e'%max(v for k,v in o.items() if not k.startswith('min')), ' 最小间距 %.2f'%min(v for k,v in o.items() if k.startswith('min')))
     except Exception as e: print('a =',a,'构造失败',e)
 print('\n--- 故意写错定义 ---')
 V=ortho_tet([1.09,1.86,1.42,2.01])
