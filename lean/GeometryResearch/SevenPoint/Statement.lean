@@ -95,10 +95,10 @@ theorem mobius_sphere (hG : G t ≠ O t) (hO' : O' t ≠ O t) :
   rwa [real_inner_self_eq_norm_sq] at this
 
 /-- 主定理，非退化形式：若 O、G、O′、V₀ 不共面，则存在一个球 s，七个点都在 s 上，
-s 与 S(O, 2R) 正交；并且在与 S(O, 2R) 正交的球中，经过这七个点的只有 s 一个。 -/
+s 与 S(O, 2R) 正交；并且经过这七个点的球只有 s 一个。 -/
 theorem seven_point_sphere (h : AffineIndependent ℝ ![O t, G t, O' t, V₀ t]) :
     ∃ s : Sphere E3, (∀ i, sevenPoints t i ∈ s) ∧ OrthogonalToBigSphere t s ∧
-      ∀ s' : Sphere E3, (∀ i, sevenPoints t i ∈ s') → OrthogonalToBigSphere t s' → s' = s := by
+      ∀ s' : Sphere E3, (∀ i, sevenPoints t i ∈ s') → s' = s := by
   -- 不共面蕴含 G ≠ O、O′ ≠ O
   have hG : G t ≠ O t := h.injective.ne (by decide : (1 : Fin 4) ≠ 0)
   have hO' : O' t ≠ O t := h.injective.ne (by decide : (2 : Fin 4) ≠ 0)
@@ -139,44 +139,62 @@ theorem seven_point_sphere (h : AffineIndependent ℝ ![O t, G t, O' t, V₀ t])
     change dist ctr (O t) ^ 2 = rad ^ 2 + (2 * R t) ^ 2
     rw [hradsq, dist_eq_norm, hctr, add_sub_cancel_right]
     ring
-  · -- 唯一性
-    intro s' hs' hort
+  · -- 唯一性：任何经过七点的球都等于 s。只用 D、C、H′、F 四点：
+    -- 相对 D，它们的向量是 −3v₀、−v₀ − 2p、4p − 4g，不共面时三者线性无关。
+    intro s' hs'
     set c' := s'.center - O t with hc'
-    -- s' 上的点都在 Σ(1, c') 上
-    have hon' : ∀ i, Algebra.OnSphere (R t) 1 c' (sevenPoints t i - O t) := by
+    -- 两个点 x、y 在以 O + c 为心的同一个球上 ⇒ 2⟪c, x − y⟫ = ‖x‖² − ‖y‖²（x、y 相对 O）
+    have chord : ∀ (c x y : E3) (r : ℝ), ‖x - c‖ = r → ‖y - c‖ = r →
+        2 * ⟪c, x - y⟫ = ⟪x, x⟫ - ⟪y, y⟫ := by
+      intro c x y r hx hy
+      have ex := congrArg (· ^ 2) hx
+      have ey := congrArg (· ^ 2) hy
+      rw [@norm_sub_sq_real, ← real_inner_self_eq_norm_sq x, ← real_inner_self_eq_norm_sq c]
+        at ex
+      rw [@norm_sub_sq_real, ← real_inner_self_eq_norm_sq y, ← real_inner_self_eq_norm_sq c]
+        at ey
+      rw [inner_sub_right, real_inner_comm x c, real_inner_comm y c]
+      linarith
+    -- 七个点到 O + c′、O + c₁ 的距离分别相等
+    have on' : ∀ i, ‖(sevenPoints t i - O t) - c'‖ = s'.radius := by
       intro i
       have hmem := hs' i
       rw [EuclideanGeometry.mem_sphere, dist_eq_norm] at hmem
-      have hx : ‖(sevenPoints t i - O t) - c'‖ = s'.radius := by
-        rw [← hmem, hc']; congr 1; abel
-      unfold OrthogonalToBigSphere at hort
-      rw [dist_eq_norm] at hort
-      unfold Algebra.OnSphere
-      have e := congrArg (· ^ 2) hx
-      rw [@norm_sub_sq_real, ← real_inner_self_eq_norm_sq (sevenPoints t i - O t),
-        real_inner_comm c' (sevenPoints t i - O t)] at e
-      rw [← hc'] at hort
-      nlinarith [e, hort]
-    -- 由 E、B、C 三点反推出三个方程
-    have hE4 := hon' 4
-    have hB1 := hon' 1
-    have hC2 := hon' 2
-    change Algebra.OnSphere _ _ _ (pointE t - O t) at hE4
-    change Algebra.OnSphere _ _ _ (pointB t - O t) at hB1
-    change Algebra.OnSphere _ _ _ (pointC t - O t) at hC2
-    rw [pointE_sub] at hE4
-    rw [pointB_sub] at hB1
-    rw [pointC_sub] at hC2
-    have eG := Algebra.eqG_of_onSphere_E hg hR hE4
-    have eP := Algebra.eqP_of_onSphere_B hp hR hB1
-    have eV := Algebra.eqV_of_onSphere_C eG (inner_v₀ t) hC2
-    -- c′ 与 c₁ 满足同样的三个方程，差与 g、p、v₀ 都垂直，所以相等
-    have hcc : c' = c₁ := by
-      have hd := eq_zero_of_inner t h (c := c' - c₁)
-        (by rw [inner_sub_left]; linarith [hE1.eqG, eG])
-        (by rw [inner_sub_left]; linarith [hE1.eqP, eP])
-        (by rw [inner_sub_left]; linarith [hE1.eqV, eV])
-      exact sub_eq_zero.mp hd
+      rw [← hmem, hc']; congr 1; abel
+    have on1 : ∀ i, ‖(sevenPoints t i - O t) - c₁‖ = rad := by
+      intro i
+      have h1 := key _ (hon i)
+      rw [← hradsq] at h1
+      exact (sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _)).mp h1
+    -- d = c′ − c₁ 与任意两点之差垂直
+    have perp : ∀ i j, ⟪c' - c₁, (sevenPoints t i - O t) - (sevenPoints t j - O t)⟫ = 0 := by
+      intro i j
+      have h1 := chord c' _ _ _ (on' i) (on' j)
+      have h2 := chord c₁ _ _ _ (on1 i) (on1 j)
+      rw [inner_sub_left]; linarith
+    -- D、C、H′、F 的向量（下标 5、2、3、6）
+    have xD : sevenPoints t 5 - O t = (4 : ℝ) • g t := pointD_sub t
+    have xC : sevenPoints t 2 - O t = (4 : ℝ) • g t - (3 : ℝ) • v₀ t := pointC_sub t
+    have xH : sevenPoints t 3 - O t = (4 : ℝ) • g t - v₀ t - (2 : ℝ) • p t := pointH'_sub t
+    have xF : sevenPoints t 6 - O t = (4 : ℝ) • p t := pointF_sub t
+    have dCD : (sevenPoints t 2 - O t) - (sevenPoints t 5 - O t) = (-3 : ℝ) • v₀ t := by
+      rw [xC, xD]; module
+    have dHD : (sevenPoints t 3 - O t) - (sevenPoints t 5 - O t)
+        = (-1 : ℝ) • v₀ t + (-2 : ℝ) • p t := by
+      rw [xH, xD]; module
+    have dFD : (sevenPoints t 6 - O t) - (sevenPoints t 5 - O t)
+        = (4 : ℝ) • p t + (-4 : ℝ) • g t := by
+      rw [xF, xD]; module
+    have hCD := perp 2 5
+    have hHD := perp 3 5
+    have hFD := perp 6 5
+    rw [dCD, real_inner_smul_right] at hCD
+    rw [dHD, inner_add_right, real_inner_smul_right, real_inner_smul_right] at hHD
+    rw [dFD, inner_add_right, real_inner_smul_right, real_inner_smul_right] at hFD
+    have hv : ⟪c' - c₁, v₀ t⟫ = 0 := by linarith
+    have hpp : ⟪c' - c₁, p t⟫ = 0 := by linarith
+    have hgg : ⟪c' - c₁, g t⟫ = 0 := by linarith
+    have hcc : c' = c₁ := sub_eq_zero.mp (eq_zero_of_inner t h hgg hpp hv)
     have hcenter : s'.center = ctr := by
       rw [hctr, ← hcc, hc']; abel
     have hradius : s'.radius = rad := by
