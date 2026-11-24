@@ -1,0 +1,19 @@
+name = "GeometryResearch"
+version = "0.1.0"
+keywords = ["math"]
+defaultTargets = ["GeometryResearch"]
+
+[leanOptions]
+pp.unicode.fun = true # pretty-prints `fun a ↦ b`
+relaxedAutoImplicit = false
+weak.linter.mathlibStandardSet = true
+weak.linter.style.header = false  # Mathlib 版权头格式检查，不适用于本项目
+maxSynthPendingDepth = 3
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.37.0-rc1"
+
+[[lean_lib]]
+name = "GeometryResearch"
