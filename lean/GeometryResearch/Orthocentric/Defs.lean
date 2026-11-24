@@ -57,6 +57,9 @@ def H : E3 := t.mongePoint
 def facePlane (i : Fin 4) : AffineSubspace ℝ E3 :=
   affineSpan ℝ (Set.range (t.faceOpposite i).points)
 
+instance (i : Fin 4) : Nonempty (facePlane t i) :=
+  ⟨⟨(t.faceOpposite i).points 0, mem_affineSpan ℝ (Set.mem_range_self 0)⟩⟩
+
 /-- 面 i 的重心 Gᵢ。 -/
 def Gface (i : Fin 4) : E3 := t.faceOppositeCentroid i
 
