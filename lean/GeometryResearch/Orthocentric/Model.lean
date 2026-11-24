@@ -116,8 +116,8 @@ theorem pt_sub_H (i : Fin 4) :
     t.points i - H t = u t i - Alg.w (u t 0) (u t 1) (u t 2) (u t 3) := by
   rw [← H_sub_O]; simp [u]
 
-/-- 论文第 2 节：⟪Vᵢ − H, Vⱼ − H⟫（i ≠ j）都等于 p。 -/
 set_option linter.flexible false in
+/-- 论文第 2 节：⟪Vᵢ − H, Vⱼ − H⟫（i ≠ j）都等于 p。 -/
 theorem inner_pt_H (ho : IsOrthocentric t) {i j : Fin 4} (hij : i ≠ j) :
     ⟪t.points i - H t, t.points j - H t⟫ = p t := by
   obtain ⟨h02, h03, h12, h13, h23⟩ := Alg.pair_eq (hyp t ho)
