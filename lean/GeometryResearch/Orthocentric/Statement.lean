@@ -8,11 +8,11 @@ public import GeometryResearch.Orthocentric.Conj
 public import GeometryResearch.Orthocentric.Fermat
 
 /-!
-# 垂心四面体五定理：形式陈述与证明
+# 垂心四面体五定理：形式陈述与证明（完成）
 
 论文：D. Zhang, *Five Theorems on the Orthocentric Tetrahedron*, Zenodo 10.5281/zenodo.23579462。
-定义见 `Defs.lean`。16 条陈述中已证 12 条（定理 1、4 的证明分别在 `Thirteen.lean`、
-`Seven.lean`），定理 2、3、5 的 4 条仍是 `sorry`，待逐条证明。
+定义见 `Defs.lean`。16 条陈述全部证明，没有 `sorry`。证明分别在 `Thirteen.lean`（定理 1）、
+`Conj.lean`（定理 2、3）、`Seven.lean`（定理 4）、`Fermat.lean`（定理 5）。
 -/
 
 @[expose] public noncomputable section

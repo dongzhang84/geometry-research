@@ -1,0 +1,16 @@
+// 定理 5 的代数证书：h2*h3*M = q1*CR + q2*PR（结果写入 Fermat.lean 的 fermat_cert）。运行：Singular -q fermat_cert.sing
+ring r = 0,(f0,f1,f2,c,C,p),dp;
+poly f3 = 1-f0-f1-f2;
+poly g0 = 1-2*f0; poly g1 = 1-2*f1; poly g2 = 1-2*f2; poly g3 = 1-2*f3;
+poly h0 = c^2-C*f0^2; poly h1 = c^2-C*f1^2; poly h2 = c^2-C*f2^2; poly h3 = c^2-C*f3^2;
+poly CR = C*g0*g1*g2*g3 - (h0*g1*g2*g3 + h1*g0*g2*g3 + h2*g0*g1*g3 + h3*g0*g1*g2);
+poly PR = p*(f0^2*g0*h1*h2*h3 + f1^2*g1*h0*h2*h3 + f2^2*g2*h0*h1*h3 + f3^2*g3*h0*h1*h2) + h0*h1*h2*h3;
+poly A0 = h0 - C*f0*g0; poly A1 = h1 - C*f1*g1;
+poly B0 = g0*h0 + 2*p*f0^2*g0; poly B1 = g1*h1 + 2*p*f1^2*g1;
+poly M = A0*B1*g1*h0 - A1*B0*g0*h1;
+ideal I = CR, PR;
+matrix T = lift(I, h2*h3*M);
+poly q1 = T[1,1]; poly q2 = T[2,1];
+"check:"; h2*h3*M - q1*CR - q2*PR;
+"terms q1"; size(q1); "terms q2"; size(q2); "deg"; deg(q1); deg(q2);
+write(":w q1.txt", q1); write(":w q2.txt", q2);

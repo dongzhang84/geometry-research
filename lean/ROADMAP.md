@@ -5,7 +5,7 @@
 | 论文 | Zenodo | 状态 |
 |---|---|---|
 | A Seven-Point Sphere of the Tetrahedron | 10.5281/zenodo.23572917 | **主定理已完整证明**（阶段 1、2 完成；阶段 3 推论未做） |
-| Five Theorems on the Orthocentric Tetrahedron | 10.5281/zenodo.23579462 | 未开始 |
+| Five Theorems on the Orthocentric Tetrahedron | 10.5281/zenodo.23579462 | **完成**：16 条陈述全部证明（2026-11-25） |
 | Eleven Theorems on the Tetrahedron with a Midsphere | zenodo.org/records/24478275 | 未开始 |
 
 ## 目录结构
