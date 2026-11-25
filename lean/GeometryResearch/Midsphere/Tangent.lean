@@ -135,4 +135,42 @@ theorem Z_mem_chord' (hfb : IsFourBall t r) {i j k l : Fin 4} (hij : i ≠ j) (h
     f1, f2, f3, f4, show sInv r = ∑ j, 1 / r j from rfl]
   module
 
+/-- Z 在弦 TᵢⱼTₖₗ 上的位置：Z = Tᵢⱼ + λ(Tₖₗ − Tᵢⱼ)，λ = (1/rₖ + 1/rₗ)/s。 -/
+theorem Z_lineMap (hfb : IsFourBall t r) {i j k l : Fin 4} (hij : i ≠ j) (hik : i ≠ k)
+    (hil : i ≠ l) (hjk : j ≠ k) (hjl : j ≠ l) (hkl : k ≠ l) :
+    AffineMap.lineMap (T t r i j) (T t r k l) ((1 / r k + 1 / r l) / sInv r) = Z t r := by
+  have hr := hfb.1
+  have hs := (sInv_pos hfb).ne'
+  have ps := GeometryResearch.Orthocentric.sum_perm (fun m => 1 / r m) hij hik hil hjk hjl hkl
+  have pv := GeometryResearch.Orthocentric.sum_perm (fun m => (1 / r m) • w t m) hij hik hil hjk
+    hjl hkl
+  have hS : sInv r = 1 / r i + 1 / r j + 1 / r k + 1 / r l := by
+    rw [sInv, Fin.sum_univ_four, ← ps]
+  set lam := (1 / r k + 1 / r l) / sInv r
+  rw [← sub_left_inj (a := t.points 0), AffineMap.lineMap_apply_module,
+    show (1 - lam) • T t r i j + lam • T t r k l - t.points 0 =
+      (1 - lam) • (T t r i j - t.points 0) + lam • (T t r k l - t.points 0) by module,
+    T_sub_V0, T_sub_V0, show Z t r = ofWeights t (fun m => 1 / r m) from rfl,
+    ofW_sub_V0 t _ hs, L, Fin.sum_univ_four (f := fun k => (1 / r k) • w t k), ← pv]
+  have hi := (hr i).ne'; have hj := (hr j).ne'; have hk := (hr k).ne'; have hl := (hr l).ne'
+  have pi := hr i; have pj := hr j; have pk := hr k; have pl := hr l
+  have he3 : r l * r k * r i + r l * r k * r j + r l * r i * r j + r k * r i * r j ≠ 0 := by
+    positivity
+  have hij' : r i + r j ≠ 0 := by have := hr i; have := hr j; linarith
+  have hkl' : r k + r l ≠ 0 := by have := hr k; have := hr l; linarith
+  have f1 : (1 - lam) * (1 - r i / (r i + r j)) = 1 / sInv r * (1 / r i) := by
+    simp only [lam]; rw [hS]; field_simp; ring
+  have f2 : (1 - lam) * (r i / (r i + r j)) = 1 / sInv r * (1 / r j) := by
+    simp only [lam]; rw [hS]; field_simp; ring
+  have f3 : lam * (1 - r k / (r k + r l)) = 1 / sInv r * (1 / r k) := by
+    simp only [lam]; rw [hS]; field_simp; ring
+  have f4 : lam * (r k / (r k + r l)) = 1 / sInv r * (1 / r l) := by
+    simp only [lam]; rw [hS]; field_simp; ring
+  rw [show (1 - lam) • ((1 - r i / (r i + r j)) • w t i + (r i / (r i + r j)) • w t j) +
+      lam • ((1 - r k / (r k + r l)) • w t k + (r k / (r k + r l)) • w t l) =
+      ((1 - lam) * (1 - r i / (r i + r j))) • w t i + ((1 - lam) * (r i / (r i + r j))) • w t j +
+      (lam * (1 - r k / (r k + r l))) • w t k + (lam * (r k / (r k + r l))) • w t l by module,
+    f1, f2, f3, f4, show sInv r = ∑ j, 1 / r j from rfl]
+  module
+
 end GeometryResearch.Midsphere

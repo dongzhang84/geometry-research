@@ -6,6 +6,7 @@ public import GeometryResearch.Midsphere.Tangent
 public import GeometryResearch.Midsphere.GMPlane
 public import GeometryResearch.Midsphere.Soddy
 public import GeometryResearch.Midsphere.Orth
+public import GeometryResearch.Midsphere.Homothety
 
 /-!
 # 棱切球四面体十一定理：形式陈述
@@ -147,8 +148,8 @@ theorem homothety_lemma (hfb : IsFourBall t r) {i j k l : Fin 4} (hij : i ≠ j)
     (hΓ : AffineIndependent ℝ ![Z t r, N t r i k j l, N t r i l j k]) :
     Eext t r k l ∈ affineSpan ℝ {Z t r, N t r i k j l, N t r i l j k} ∧
       (⟨_, hΓ⟩ : Affine.Triangle ℝ E3).circumsphere.power (Eext t r k l) =
-        r l / r k * (ball t r k).power (Eext t r k l) := by
-  sorry
+        r l / r k * (ball t r k).power (Eext t r k l) :=
+  homothety_main hfb hij hik hil hjk hjl hkl hrkl hΓ
 
 /-- 定理 9（正交球引理）：{i, j}、{k, l} 为一对对棱，σ₁、σ₂ 为两个不同的 Soddy 球。经过 Tᵢⱼ 且
 与 σ₁、σ₂ 都正交的球也经过 Tₖₗ。（Soddy 球为平面的情形未形式化。） -/
