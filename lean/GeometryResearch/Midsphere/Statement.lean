@@ -3,6 +3,7 @@ module
 public import GeometryResearch.Midsphere.Defs
 public import GeometryResearch.Midsphere.Central
 public import GeometryResearch.Midsphere.Tangent
+public import GeometryResearch.Midsphere.GMPlane
 
 /-!
 # 棱切球四面体十一定理：形式陈述
@@ -81,11 +82,13 @@ theorem central_plane (hfb : IsFourBall t r) :
       ∀ S ρs, IsSoddy t r S ρs → Coplanar ℝ ({G t, O t, K t, M t r, Z t r, S} : Set E3) :=
   central_main hfb
 
+-- 证明没有用到 hGM（G ≠ M）：这个假设取自论文（使直线 GM 有定义），为忠实于论文保留。
+set_option linter.unusedVariables false in
 /-- 定理 2（GM 共轭平面）：G ≠ M，P 在直线 GM 上且两种共轭都有定义，则 P*、Pᵗ 与直线 GM 共面。 -/
 theorem gm_conjugate_plane (hfb : IsFourBall t r) (hGM : G t ≠ M t r) {P : E3}
     (hP : P ∈ line[ℝ, G t, M t r]) (hd : ConjDefined t P) :
-    Coplanar ℝ ({G t, M t r, isogonal t P, isotomic t P} : Set E3) := by
-  sorry
+    Coplanar ℝ ({G t, M t r, isogonal t P, isotomic t P} : Set E3) :=
+  gm_main hfb hP hd
 
 /-! ## 定理 3：八点球 -/
 
