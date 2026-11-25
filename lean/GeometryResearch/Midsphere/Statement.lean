@@ -7,7 +7,7 @@ public import GeometryResearch.Midsphere.GMPlane
 public import GeometryResearch.Midsphere.Soddy
 public import GeometryResearch.Midsphere.Orth
 public import GeometryResearch.Midsphere.Homothety
-public import GeometryResearch.Midsphere.Concyclic
+public import GeometryResearch.Midsphere.FivePoint
 
 /-!
 # 棱切球四面体十一定理：形式陈述
@@ -128,8 +128,8 @@ theorem concyclic_four (hfb : IsFourBall t r) (hcol : ¬ Collinear ℝ ({O t, M 
 /-- 定理 5：面 012、123 都不是等边三角形，则 T₁₂、N₀₁|₂₃、N₀₂|₁₃、X₁₁⁰¹²、X₁₁¹²³ 共球（或共面）。 -/
 theorem five_point_5 (hfb : IsFourBall t r) (h012 : ¬ (r 0 = r 1 ∧ r 1 = r 2))
     (h123 : ¬ (r 1 = r 2 ∧ r 2 = r 3)) :
-    MCospherical ({T t r 1 2, N t r 0 1 2 3, N t r 0 2 1 3, X11 t r 3, X11 t r 0} : Set E3) := by
-  sorry
+    MCospherical ({T t r 1 2, N t r 0 1 2 3, N t r 0 2 1 3, X11 t r 3, X11 t r 0} : Set E3) :=
+  five_main hfb h012 h123
 
 /-- 定理 6：面 013 不是等边三角形，则 V₁、I₀₁₂、T₁₃、N₀₁|₂₃、X₁₁⁰¹³ 共球（或共面）。 -/
 theorem five_point_6 (hfb : IsFourBall t r) (h013 : ¬ (r 0 = r 1 ∧ r 1 = r 3)) :
