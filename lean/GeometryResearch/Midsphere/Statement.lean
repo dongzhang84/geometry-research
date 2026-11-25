@@ -1,6 +1,7 @@
 module
 
 public import GeometryResearch.Midsphere.Defs
+public import GeometryResearch.Midsphere.Central
 
 /-!
 # 棱切球四面体十一定理：形式陈述
@@ -26,8 +27,8 @@ variable (t : Affine.Simplex ℝ E3 3) (r : Fin 4 → ℝ)
 /-- Tᵢⱼ 在棱 VᵢVⱼ 上，且到 Vᵢ、Vⱼ 的距离分别为 rᵢ、rⱼ（即 Σᵢ 与 Σⱼ 的切点）。 -/
 theorem T_spec (hfb : IsFourBall t r) {i j : Fin 4} (hij : i ≠ j) :
     T t r i j ∈ segment ℝ (t.points i) (t.points j) ∧
-      dist (t.points i) (T t r i j) = r i ∧ dist (T t r i j) (t.points j) = r j := by
-  sorry
+      dist (t.points i) (T t r i j) = r i ∧ dist (T t r i j) (t.points j) = r j :=
+  T_spec' hfb hij
 
 /-- 棱切球：μ 经过六个切点，并在那里与棱相切（半径 MTᵢⱼ 垂直于棱）。 -/
 theorem M_tangent (hfb : IsFourBall t r) {i j : Fin 4} (hij : i ≠ j) :
@@ -42,8 +43,8 @@ theorem Z_mem_chord (hfb : IsFourBall t r) {i j k l : Fin 4} (hij : i ≠ j) (hi
 
 /-- 类似重心是 G 的等角共轭；面积平方满足 Heron 公式 Sᵢ² = (Σr − rᵢ)·Πr/rᵢ。 -/
 theorem K_spec (hfb : IsFourBall t r) :
-    K t = isogonal t (G t) ∧ ∀ i, S2 t i = (∑ j, r j - r i) * (∏ j, r j) / r i := by
-  sorry
+    K t = isogonal t (G t) ∧ ∀ i, S2 t i = (∑ j, r j - r i) * (∏ j, r j) / r i :=
+  ⟨K_isog, heron hfb⟩
 
 /-- Feuerbach 点的忠实性：面不是等边三角形时，`X11` 同时在面的九点圆和内切圆上。 -/
 theorem X11_faithful (hfb : IsFourBall t r) (l : Fin 4)
@@ -68,16 +69,16 @@ theorem soddy_curvature (hfb : IsFourBall t r) {S : E3} {ρs : ℝ} (hS : IsSodd
   sorry
 
 /-- Fermat 点存在。 -/
-theorem exists_fermat : ∃ F, IsFermatPoint t F := by
-  sorry
+theorem exists_fermat : ∃ F, IsFermatPoint t F :=
+  exists_fermat'
 
 /-! ## 定理 1、2 -/
 
 /-- 定理 1（中心平面）：G、O、K、M、Z 共面，且这个平面含有每个（非平面）Soddy 球的球心。 -/
 theorem central_plane (hfb : IsFourBall t r) :
     Coplanar ℝ ({G t, O t, K t, M t r, Z t r} : Set E3) ∧
-      ∀ S ρs, IsSoddy t r S ρs → Coplanar ℝ ({G t, O t, K t, M t r, Z t r, S} : Set E3) := by
-  sorry
+      ∀ S ρs, IsSoddy t r S ρs → Coplanar ℝ ({G t, O t, K t, M t r, Z t r, S} : Set E3) :=
+  central_main hfb
 
 /-- 定理 2（GM 共轭平面）：G ≠ M，P 在直线 GM 上且两种共轭都有定义，则 P*、Pᵗ 与直线 GM 共面。 -/
 theorem gm_conjugate_plane (hfb : IsFourBall t r) (hGM : G t ≠ M t r) {P : E3}
