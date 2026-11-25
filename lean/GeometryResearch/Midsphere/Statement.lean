@@ -5,6 +5,7 @@ public import GeometryResearch.Midsphere.Central
 public import GeometryResearch.Midsphere.Tangent
 public import GeometryResearch.Midsphere.GMPlane
 public import GeometryResearch.Midsphere.Soddy
+public import GeometryResearch.Midsphere.Orth
 
 /-!
 # 棱切球四面体十一定理：形式陈述
@@ -157,8 +158,8 @@ theorem orthogonal_sphere (hfb : IsFourBall t r) {i j k l : Fin 4} (hij : i ≠ 
     (s : Sphere E3) (hT : T t r i j ∈ s)
     (ho₁ : dist s.center S₁ ^ 2 = s.radius ^ 2 + ρ₁ ^ 2)
     (ho₂ : dist s.center S₂ ^ 2 = s.radius ^ 2 + ρ₂ ^ 2) :
-    T t r k l ∈ s := by
-  sorry
+    T t r k l ∈ s :=
+  orth_main hfb hij hik hil hjk hjl hkl h₁ h₂ hne s hT ho₁ ho₂
 
 /-! ## 定理 10：Soddy 五点球 -/
 
