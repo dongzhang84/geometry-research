@@ -86,6 +86,8 @@ theorem central_plane (hfb : IsFourBall t r) :
   central_main hfb
 
 -- 证明没有用到 hGM（G ≠ M）：这个假设取自论文（使直线 GM 有定义），为忠实于论文保留。
+-- `ConjDefined` 比论文的「P 不在面平面上」多要求两种共轭的权重和非零（共轭点不在无穷远），
+-- 这是共轭取普通点所必需的。
 set_option linter.unusedVariables false in
 /-- 定理 2（GM 共轭平面）：G ≠ M，P 在直线 GM 上且两种共轭都有定义，则 P*、Pᵗ 与直线 GM 共面。 -/
 theorem gm_conjugate_plane (hfb : IsFourBall t r) (hGM : G t ≠ M t r) {P : E3}
