@@ -7,6 +7,7 @@ public import GeometryResearch.Midsphere.GMPlane
 public import GeometryResearch.Midsphere.Soddy
 public import GeometryResearch.Midsphere.Orth
 public import GeometryResearch.Midsphere.Homothety
+public import GeometryResearch.Midsphere.Concyclic
 
 /-!
 # 棱切球四面体十一定理：形式陈述
@@ -119,8 +120,8 @@ theorem concyclic_four (hfb : IsFourBall t r) (hcol : ¬ Collinear ℝ ({O t, M 
     let G' := inversion (O t) (R t) (G t)
     let G2 := AffineMap.homothety (O t) (-1 : ℝ) (G t)
     Concyclic ({K', G', A, B, G2} : Set E3) ∧
-      Coplanar ℝ ({G t, O t, K t, M t r, Z t r, K', G', A, B, G2} : Set E3) := by
-  sorry
+      Coplanar ℝ ({G t, O t, K t, M t r, Z t r, K', G', A, B, G2} : Set E3) :=
+  concyclic_main hfb hcol hKM
 
 /-! ## 定理 5–7：三个五点球 -/
 
