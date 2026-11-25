@@ -12,6 +12,8 @@ public import GeometryResearch.Midsphere.Fermat
 /-!
 # 棱切球四面体十一定理：形式陈述
 
+论文：D. Zhang, *Eleven Theorems on the Tetrahedron with a Midsphere*, Zenodo 10.5281/zenodo.24478275。
+
 定义见 `Defs.lean`。所有陈述都假设 `IsFourBall t r`（四面体有棱切球，切长为 r）。
 「共球」按论文的 Möbius 约定写成 `MCospherical`（在一个球面上或一个平面上）。
 -/

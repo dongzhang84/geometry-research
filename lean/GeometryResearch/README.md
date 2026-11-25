@@ -6,7 +6,7 @@
 |---|---|---|---|---|
 | [`SevenPoint/`](SevenPoint/) | *A Seven-Point Sphere of the Tetrahedron*（[Zenodo](https://doi.org/10.5281/zenodo.23572917)） | 1 | 8 | 全部证完 |
 | [`Orthocentric/`](Orthocentric/) | *Five Theorems on the Orthocentric Tetrahedron*（[Zenodo](https://doi.org/10.5281/zenodo.23579462)） | 5 | 16 | 全部证完 |
-| [`Midsphere/`](Midsphere/) | 棱切球四面体的十一条定理 | 11 | 19 | 全部证完 |
+| [`Midsphere/`](Midsphere/) | *Eleven Theorems on the Tetrahedron with a Midsphere*（[Zenodo](https://zenodo.org/records/24478275)） | 11 | 19 | 全部证完 |
 | 合计 | | **17** | **43** | 零 `sorry` |
 
 「形式陈述」比主定理多，多出来的是**忠实性引理**和**存在性引理**。忠实性引理检查我们自己写的定义确实是论文里的概念，例如「`S2 i` 确实是第 i 个面面积的平方」「`X11` 确实同时在面的九点圆和内切圆上」。存在性引理检查定理的假设能被满足，例如 Soddy 球存在、Fermat 点存在，防止定理因为假设互相矛盾而空真。
