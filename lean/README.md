@@ -48,6 +48,17 @@ GeometryResearch/SevenPoint/
   Geometry.lean                    Mathlib 定义到向量公式的展开
   Statement.lean                   七个定理的陈述和证明
   汇报_阶段1.md、汇报_阶段2.md       阶段汇报
+GeometryResearch/Orthocentric/
+  Defs.lean                        定义：垂心四面体、H、p、aᵢ、ψ、共轭、Fermat 点等
+  Model.lean                       代数模型（以 O、H 为原点）和核心关系 Σvᵢ/aᵢ = 0
+  Thirteen.lean                    定理 1（十三点球）
+  Conj.lean                        定理 2、3（两条欧拉线上的共轭）
+  Seven.lean                       定理 4（七线共点）
+  Fermat.lean                      定理 5（Fermat 共线），含 Singular 生成的代数证书
+  Statement.lean                   16 条陈述及其证明
+  fermat_cert.sing                 生成定理 5 证书的 Singular 脚本
+  numeric_check.py                 陈述的数值核对
+  汇报_阶段1.md                     汇报（陈述、审查、三批证明）
 GeometryResearch/Basic.lean        模板自带的空文件
 ```
 
@@ -57,7 +68,7 @@ GeometryResearch/Basic.lean        模板自带的空文件
 lake build
 ```
 
-应当零错误、零警告。七点球的七个定理都已证明，`#print axioms` 只显示 `propext`、`Classical.choice`、`Quot.sound` 三条标准公理。
+应当零错误、零警告、零 `sorry`。七点球的七个定理、垂心四面体的 16 条陈述都已证明，`#print axioms` 只显示 `propext`、`Classical.choice`、`Quot.sound` 三条标准公理。
 
 ## 配置说明
 
