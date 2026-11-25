@@ -13,6 +13,10 @@ n = λv，λ = (R² − |OG|²)/(2|v|²)，则球心 O + n、半径² = R² + |n
 
 @[expose] public noncomputable section
 
+-- 这一文件里的闭式引理由脚本生成，行较长、simp 参数统一列出
+set_option linter.style.longLine false
+set_option linter.unusedSimpArgs false
+
 open EuclideanGeometry
 open scoped RealInnerProductSpace
 
