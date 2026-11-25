@@ -4,6 +4,7 @@ public import GeometryResearch.Orthocentric.Defs
 public import GeometryResearch.Orthocentric.Model
 public import GeometryResearch.Orthocentric.Thirteen
 public import GeometryResearch.Orthocentric.Seven
+public import GeometryResearch.Orthocentric.Conj
 
 /-!
 # 垂心四面体五定理：形式陈述与证明
@@ -208,26 +209,33 @@ theorem exists_sphere_thirteen (i : Fin 4) :
 
 /-! ## 定理 2、3：两条欧拉线上的共轭 -/
 
+-- 证明没有用到 hOH（O ≠ H）：这个假设取自论文（排除正四面体，使欧拉线有定义），
+-- 为忠实于论文保留在陈述里。
+set_option linter.unusedVariables false in
 /-- 定理 2（欧拉线共轭平面）：四面体不是正四面体（O ≠ H），P 在欧拉线 OH 上且两种共轭都有定义，
 则 P*、Pᵗ 与欧拉线共面。 -/
 theorem euler_line_conjugate_plane (ho : IsOrthocentric t) (hOH : O t ≠ H t)
     {P : E3} (hP : P ∈ line[ℝ, O t, H t]) (hd : ConjDefined t P) :
-    Coplanar ℝ ({O t, H t, isogonal t P, isotomic t P} : Set E3) := by
-  sorry
+    Coplanar ℝ ({O t, H t, isogonal t P, isotomic t P} : Set E3) :=
+  euler_main t ho hP hd
 
+-- 证明没有用到 hOO（O ≠ O*）：这个假设取自论文（使直线 OO* 有定义），为忠实于论文保留。
+set_option linter.unusedVariables false in
 /-- 定理 3（第二欧拉线上的共轭共线）：O 的两种共轭有定义且 O ≠ O*，P 在直线 OO* 上且两种共轭
 都有定义，则 O、P*、Pᵗ 共线。 -/
 theorem second_euler_line_collinear (ho : IsOrthocentric t) (hO : ConjDefined t (O t))
     (hOO : O t ≠ isogonal t (O t)) {P : E3} (hP : P ∈ line[ℝ, O t, isogonal t (O t)])
     (hd : ConjDefined t P) :
-    Collinear ℝ ({O t, isogonal t P, isotomic t P} : Set E3) := by
-  sorry
+    Collinear ℝ ({O t, isogonal t P, isotomic t P} : Set E3) :=
+  oostar_main t ho hO hP hd
 
+-- 证明没有用到 hOO（O ≠ O*）：这个假设取自论文（使直线 OO* 有定义），为忠实于论文保留。
+set_option linter.unusedVariables false in
 /-- 定理 3 的特例（P = O）：O、O*、Oᵗ 共线。 -/
 theorem O_isogonal_isotomic_collinear (ho : IsOrthocentric t) (hO : ConjDefined t (O t))
     (hOO : O t ≠ isogonal t (O t)) :
-    Collinear ℝ ({O t, isogonal t (O t), isotomic t (O t)} : Set E3) := by
-  sorry
+    Collinear ℝ ({O t, isogonal t (O t), isotomic t (O t)} : Set E3) :=
+  oostar_main t ho hO (left_mem_affineSpan_pair ℝ _ _) hO
 
 /-! ## 定理 4：七线共点 -/
 
