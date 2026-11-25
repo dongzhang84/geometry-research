@@ -59,7 +59,7 @@ GeometryResearch/Orthocentric/
   fermat_cert.sing                 生成定理 5 证书的 Singular 脚本
   numeric_check.py                 陈述的数值核对
   汇报_阶段1.md                     汇报（陈述、审查、三批证明）
-GeometryResearch/Midsphere/        棱切球四面体（进行中，见 Midsphere/汇报.md）
+GeometryResearch/Midsphere/        棱切球四面体（19 条陈述全部证完，见 Midsphere/汇报.md）
   Defs.lean、Statement.lean        定义与 19 条陈述
   Model.lean、Faith.lean、Central.lean、Tangent.lean、GMPlane.lean、Soddy.lean、Orth.lean、
   Homothety.lean                   已证部分的证明

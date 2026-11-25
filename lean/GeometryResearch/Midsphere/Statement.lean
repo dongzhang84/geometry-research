@@ -7,7 +7,7 @@ public import GeometryResearch.Midsphere.GMPlane
 public import GeometryResearch.Midsphere.Soddy
 public import GeometryResearch.Midsphere.Orth
 public import GeometryResearch.Midsphere.Homothety
-public import GeometryResearch.Midsphere.X11Faith
+public import GeometryResearch.Midsphere.Fermat
 
 /-!
 # 棱切球四面体十一定理：形式陈述
@@ -183,7 +183,7 @@ theorem soddy_five_point (hfb : IsFourBall t r) (hreg : ¬ ∀ i j, r i = r j)
 /-- 定理 11（Fermat 线）：Fermat 点 F 不是顶点，则 F、F*、M 共线。 -/
 theorem fermat_line (hfb : IsFourBall t r) {F : E3} (hF : IsFermatPoint t F)
     (hFv : ∀ j, F ≠ t.points j) :
-    Collinear ℝ ({F, isogonal t F, M t r} : Set E3) := by
-  sorry
+    Collinear ℝ ({F, isogonal t F, M t r} : Set E3) :=
+  fermat_main hfb hF hFv
 
 end GeometryResearch.Midsphere
