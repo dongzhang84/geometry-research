@@ -117,4 +117,4 @@ lean/
 试点跑通后，再评估另外两篇：
 
 - **垂心四面体**：✅ 2026-11-25 完成，16 条陈述全部证明，见 `GeometryResearch/Orthocentric/汇报_阶段1.md`。定理 5 没有用论文的稠密性论证，而是用 Singular 生成、Lean 验证的代数证书覆盖全部情形。
-- **棱切球四面体**：✅ 2026-11-25 完成：19 条陈述全部证完（论文 11 条定理与 8 条辅助陈述），零 `sorry`，未经 Codex 审查，见 `GeometryResearch/Midsphere/汇报.md`。原计划：定理 1、2、3、9、10 是手算证明，适合先做。定理 4–8 和 10 的符号计算部分需要评估 `ring`、`field_simp` 能不能处理。定理 11 依赖 Gröbner 基证书，可以考虑在 Lean 里直接核对证书中的多项式恒等式（`ring` 或 `linear_combination`）。
+- **棱切球四面体**：✅ 2026-11-25 完成：19 条陈述全部证完（论文 11 条定理与 8 条辅助陈述），零 `sorry`，已经 Codex 审查，见 `GeometryResearch/Midsphere/汇报.md`。原计划：定理 1、2、3、9、10 是手算证明，适合先做。定理 4–8 和 10 的符号计算部分需要评估 `ring`、`field_simp` 能不能处理。定理 11 依赖 Gröbner 基证书，可以考虑在 Lean 里直接核对证书中的多项式恒等式（`ring` 或 `linear_combination`）。

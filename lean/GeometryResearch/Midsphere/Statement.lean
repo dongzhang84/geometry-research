@@ -167,7 +167,8 @@ theorem orthogonal_sphere (hfb : IsFourBall t r) {i j k l : Fin 4} (hij : i ≠ 
 
 /-! ## 定理 10：Soddy 五点球 -/
 
--- 证明没有用到 hreg：正四面体时五点落在平面 x_i = x_j 上，归入「或共面」。保留它是为了与论文一致。
+-- 证明没有用到 hreg：正四面体时形式表达式中的五点落在平面 x_i = x_j 上。但这时 M = S，论文的反演点 M′
+-- 在几何上没有定义（Mathlib 的 inversion 在中心处按除零约定返回中心），所以保留 hreg，与论文一致。
 set_option linter.unusedVariables false in
 /-- 定理 10（Soddy 五点球）：四面体不是正四面体（切长不全相等），{i, j}、{k, l} 为一对对棱，
 σ 为一个 Soddy 球，M′ 为 M 关于 σ 的反演点。则 Z、Nᵢⱼ|ₖₗ、σ 与 Σₖ、Σₗ 的切点、M′ 共球（或共面）。（σ 为平面的情形未形式化。） -/

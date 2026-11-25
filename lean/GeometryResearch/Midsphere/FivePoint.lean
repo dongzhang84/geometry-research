@@ -9,7 +9,8 @@ public import Mathlib.Analysis.InnerProductSpace.Projection.FiniteDimensional
 T₁₂ 与两个 Feuerbach 点都在棱切球 μ 上。设 Π 为过这三点的平面，ℓ 为它的仿射方程（由重心坐标值给出）。
 所求的球取 μ 与 Π 生成的球束中的 pow_μ + λℓ = 0。弦中点 N 对 μ 的幂为 −(半弦长)²，
 所以条件化为 |T₀₂T₁₃|²(ℓ(T₀₁) + ℓ(T₂₃)) = |T₀₁T₂₃|²(ℓ(T₀₂) + ℓ(T₁₃))。
-r₁ = r₂ 时三点重合为 T₁₂，五点只剩三个，自然共面。
+r₁ = r₂ 时三点重合为 T₁₂，五点只剩三个，自然共面。r₁ ≠ r₂ 但 ℓ(N₀₁|₂₃) = 0 时（例如切长 1/2, 1, 2, 4），
+由上式 ℓ(N₀₂|₁₃) 也为零，五点都在 Π 上。
 -/
 
 @[expose] public noncomputable section
