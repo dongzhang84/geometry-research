@@ -122,8 +122,7 @@ theorem T_on_ZN {T₁ T₂ Zp : E3} {lam : ℝ} (hZ : AffineMap.lineMap T₁ T�
       ((-lam / (1 / 2 - lam)) * (1 / 2 - lam)) • (T₂ - T₁) by module, this]
   module
 
--- 最后一步要对一个很大的有理式做 field_simp，需要提高 heartbeats 上限。
-set_option maxHeartbeats 4000000 in
+set_option maxHeartbeats 4000000 in -- 最后一步对很大的有理式做 field_simp
 /-- 定理 8 的证明。 -/
 theorem homothety_main (hfb : IsFourBall t r) {i j k l : Fin 4} (hij : i ≠ j) (hik : i ≠ k)
     (hil : i ≠ l) (hjk : j ≠ k) (hjl : j ≠ l) (hkl : k ≠ l) (hrkl : r k ≠ r l)
