@@ -2,6 +2,7 @@ module
 
 public import GeometryResearch.Midsphere.Defs
 public import GeometryResearch.Midsphere.Central
+public import GeometryResearch.Midsphere.Tangent
 
 /-!
 # 棱切球四面体十一定理：形式陈述
@@ -32,14 +33,14 @@ theorem T_spec (hfb : IsFourBall t r) {i j : Fin 4} (hij : i ≠ j) :
 
 /-- 棱切球：μ 经过六个切点，并在那里与棱相切（半径 MTᵢⱼ 垂直于棱）。 -/
 theorem M_tangent (hfb : IsFourBall t r) {i j : Fin 4} (hij : i ≠ j) :
-    T t r i j ∈ midsphere t r ∧ ⟪T t r i j - M t r, t.points j - t.points i⟫ = 0 := by
-  sorry
+    T t r i j ∈ midsphere t r ∧ ⟪T t r i j - M t r, t.points j - t.points i⟫ = 0 :=
+  M_tangent' hfb hij
 
 /-- Zeeman 点在三条连线 TᵢⱼTₖₗ 上（{i, j}、{k, l} 为一对对棱）。 -/
 theorem Z_mem_chord (hfb : IsFourBall t r) {i j k l : Fin 4} (hij : i ≠ j) (hik : i ≠ k)
     (hil : i ≠ l) (hjk : j ≠ k) (hjl : j ≠ l) (hkl : k ≠ l) :
-    Z t r ∈ line[ℝ, T t r i j, T t r k l] := by
-  sorry
+    Z t r ∈ line[ℝ, T t r i j, T t r k l] :=
+  Z_mem_chord' hfb hij hik hil hjk hjl hkl
 
 /-- 类似重心是 G 的等角共轭；面积平方满足 Heron 公式 Sᵢ² = (Σr − rᵢ)·Πr/rᵢ。 -/
 theorem K_spec (hfb : IsFourBall t r) :
