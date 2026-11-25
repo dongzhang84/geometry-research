@@ -7,7 +7,7 @@ public import GeometryResearch.Midsphere.GMPlane
 public import GeometryResearch.Midsphere.Soddy
 public import GeometryResearch.Midsphere.Orth
 public import GeometryResearch.Midsphere.Homothety
-public import GeometryResearch.Midsphere.SixSeven
+public import GeometryResearch.Midsphere.X11Faith
 
 /-!
 # 棱切球四面体十一定理：形式陈述
@@ -56,8 +56,8 @@ theorem K_spec (hfb : IsFourBall t r) :
 theorem X11_faithful (hfb : IsFourBall t r) (l : Fin 4)
     (hne : ∃ i j, i ≠ l ∧ j ≠ l ∧ r i ≠ r j) :
     X11 t r l ∈ (t.faceOpposite l).ninePointCircle ∧
-      dist (X11 t r l) (Ipt t l) = (t.faceOpposite l).inradius := by
-  sorry
+      dist (X11 t r l) (Ipt t l) = (t.faceOpposite l).inradius :=
+  X11_main hfb l hne
 
 /-- Soddy 球存在：当两个曲率 s/2 ± 3√D 都不为 0（没有 Soddy 球退化为平面）时，有两个不同的
 Soddy 球。（保证定理 1、3、9、10 不空。） -/
