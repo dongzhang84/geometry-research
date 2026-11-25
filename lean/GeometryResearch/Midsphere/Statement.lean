@@ -7,7 +7,7 @@ public import GeometryResearch.Midsphere.GMPlane
 public import GeometryResearch.Midsphere.Soddy
 public import GeometryResearch.Midsphere.Orth
 public import GeometryResearch.Midsphere.Homothety
-public import GeometryResearch.Midsphere.Eight
+public import GeometryResearch.Midsphere.SoddyFive
 
 /-!
 # 棱切球四面体十一定理：形式陈述
@@ -167,14 +167,16 @@ theorem orthogonal_sphere (hfb : IsFourBall t r) {i j k l : Fin 4} (hij : i ≠ 
 
 /-! ## 定理 10：Soddy 五点球 -/
 
+-- 证明没有用到 hreg：正四面体时五点落在平面 x_i = x_j 上，归入「或共面」。保留它是为了与论文一致。
+set_option linter.unusedVariables false in
 /-- 定理 10（Soddy 五点球）：四面体不是正四面体（切长不全相等），{i, j}、{k, l} 为一对对棱，
 σ 为一个 Soddy 球，M′ 为 M 关于 σ 的反演点。则 Z、Nᵢⱼ|ₖₗ、σ 与 Σₖ、Σₗ 的切点、M′ 共球（或共面）。（σ 为平面的情形未形式化。） -/
 theorem soddy_five_point (hfb : IsFourBall t r) (hreg : ¬ ∀ i j, r i = r j)
     {i j k l : Fin 4} (hij : i ≠ j) (hik : i ≠ k) (hil : i ≠ l) (hjk : j ≠ k) (hjl : j ≠ l)
     (hkl : k ≠ l) {S : E3} {ρs : ℝ} (hS : IsSoddy t r S ρs) :
     MCospherical ({Z t r, N t r i j k l, soddyPt t r S ρs k, soddyPt t r S ρs l,
-      inversion S |ρs| (M t r)} : Set E3) := by
-  sorry
+      inversion S |ρs| (M t r)} : Set E3) :=
+  soddy_five_main hfb hij hik hil hjk hjl hkl hS
 
 /-! ## 定理 11：Fermat 线 -/
 
