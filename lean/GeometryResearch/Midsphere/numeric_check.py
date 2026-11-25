@@ -138,13 +138,16 @@ def run(r, bad=None):
     out['min 不共面度(3,5,6,7,10)'] = min(coplanar(P5a), coplanar(P6a), coplanar(P7a),
         min(coplanar([c.T(0, 1), c.T(0, 2), c.T(1, 3), c.T(2, 3), c.sp(S1, r1, 1)]), 1.0),
         coplanar([c.Z, c.N(0, 1, 2, 3), c.sp(S1, r1, 2), c.sp(S1, r1, 3), inversion(S1, abs(r1), c.M)]))
-    # 定理 8
-    Zs, N1, N2 = c.Z, c.N(0, 2, 1, 3), c.N(0, 3, 1, 2); Cc = circum_tri([Zs, N1, N2]); Rc = nrm(Zs-Cc)
+    # 定理 8：全部 (i,j,k,l)
     e = 0
-    for k, l in ((2, 3), (0, 1)):
-        E = lineMap(V[k], V[l], -r[k]/(r[l]-r[k]))
-        e = max(e, coplanar([Zs, N1, N2, E]), float(abs((dot(E-Cc, E-Cc)-Rc**2)-r[l]/r[k]*(dot(E-V[k], E-V[k])-r[k]**2))))
+    for (i, j), (k, l) in [((0, 1), (2, 3)), ((2, 3), (0, 1)), ((0, 2), (1, 3)), ((1, 3), (0, 2)), ((0, 3), (1, 2)), ((1, 2), (0, 3))]:
+        for (kk, ll) in ((k, l), (l, k)):
+            Zs, N1, N2 = c.Z, c.N(i, kk, j, ll), c.N(i, ll, j, kk); Cc = circum_tri([Zs, N1, N2]); Rc = nrm(Zs-Cc)
+            E = lineMap(V[kk], V[ll], -r[kk]/(r[ll]-r[kk]))
+            e = max(e, coplanar([Zs, N1, N2, E]), float(abs((dot(E-Cc, E-Cc)-Rc**2)-r[ll]/r[kk]*(dot(E-V[kk], E-V[kk])-r[kk]**2))))
     out['定理8'] = e
+    D = (c.sInv**2-2*sum(1/x**2 for x in r))/12
+    out['Soddy 曲率'] = max(min(float(abs(1/rho-(c.sInv/2+3*sqrt(D)))), float(abs(1/rho-(c.sInv/2-3*sqrt(D))))) for S, rho in c.So)
     # 定理 9：过 Tij 且与两个 Soddy 球正交的球，球心 X 满足两个线性方程，取直线上的几个点
     e = 0
     for (i, j), (k, l) in [((0, 1), (2, 3)), ((2, 3), (0, 1)), ((0, 2), (1, 3)), ((1, 2), (0, 3))]:

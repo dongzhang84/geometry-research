@@ -59,6 +59,14 @@ theorem exists_soddy (hfb : IsFourBall t r)
     ∃ S₁ ρ₁ S₂ ρ₂, IsSoddy t r S₁ ρ₁ ∧ IsSoddy t r S₂ ρ₂ ∧ (S₁, ρ₁) ≠ (S₂, ρ₂) := by
   sorry
 
+/-- Soddy 球的刻画：任一满足 `IsSoddy` 的球，曲率 1/ρₛ 是 s/2 ± 3√D 之一，
+D = (s² − 2Σ1/rᵢ²)/12 为 Descartes 判别式（论文 Lemma 2.1）。与 `exists_soddy` 合起来说明
+`IsSoddy` 恰好刻画了论文的（非平面）Soddy 球。 -/
+theorem soddy_curvature (hfb : IsFourBall t r) {S : E3} {ρs : ℝ} (hS : IsSoddy t r S ρs) :
+    let D := (sInv r ^ 2 - 2 * ∑ i, 1 / r i ^ 2) / 12
+    1 / ρs = sInv r / 2 + 3 * √D ∨ 1 / ρs = sInv r / 2 - 3 * √D := by
+  sorry
+
 /-- Fermat 点存在。 -/
 theorem exists_fermat : ∃ F, IsFermatPoint t F := by
   sorry
@@ -79,8 +87,9 @@ theorem gm_conjugate_plane (hfb : IsFourBall t r) (hGM : G t ≠ M t r) {P : E3}
 
 /-! ## 定理 3：八点球 -/
 
-/-- 定理 3（八点球）：σ₁、σ₂ 是两个不同的 Soddy 球，则 T₀₁、T₀₂、T₁₃、T₂₃、σ₁ 与 Σ₁、Σ₂ 的切点、
-σ₂ 与 Σ₀、Σ₃ 的切点共球（或共面）。 -/
+/-- 定理 3（八点球）：σ₁、σ₂ 是两个不同的（非平面）Soddy 球，则 T₀₁、T₀₂、T₁₃、T₂₃、σ₁ 与 Σ₁、Σ₂ 的切点、
+σ₂ 与 Σ₀、Σ₃ 的切点共球（或共面）。
+论文指出 Soddy 球为平面时定理同样成立，这一情形未形式化（`IsSoddy` 要求 ρₛ ≠ 0）。 -/
 theorem eight_point_sphere (hfb : IsFourBall t r) {S₁ S₂ : E3} {ρ₁ ρ₂ : ℝ}
     (h₁ : IsSoddy t r S₁ ρ₁) (h₂ : IsSoddy t r S₂ ρ₂) (hne : (S₁, ρ₁) ≠ (S₂, ρ₂)) :
     MCospherical ({T t r 0 1, T t r 0 2, T t r 1 3, T t r 2 3,
@@ -123,25 +132,19 @@ theorem five_point_7 (hfb : IsFourBall t r) :
 
 /-! ## 定理 8、9：两个引理 -/
 
-/-- 定理 8（位似引理），对棱 {01|23}：Γ 是过 Z、N₀₂|₁₃、N₀₃|₁₂ 的圆（假设三点不共线），
-E 是 Σ₂、Σ₃ 的外位似中心（r₂ ≠ r₃）。则 E 在 Γ 所在平面上，且 E 对 Γ 的幂等于 (r₃/r₂)·pow(E, Σ₂)。 -/
-theorem homothety_lemma (hfb : IsFourBall t r) (h23 : r 2 ≠ r 3)
-    (hΓ : AffineIndependent ℝ ![Z t r, N t r 0 2 1 3, N t r 0 3 1 2]) :
-    Eext t r 2 3 ∈ affineSpan ℝ {Z t r, N t r 0 2 1 3, N t r 0 3 1 2} ∧
-      (⟨_, hΓ⟩ : Affine.Triangle ℝ E3).circumsphere.power (Eext t r 2 3) =
-        r 3 / r 2 * (ball t r 2).power (Eext t r 2 3) := by
-  sorry
-
-/-- 定理 8 的另一半：同一对棱，换成 Σ₀、Σ₁ 的外位似中心（r₀ ≠ r₁）。 -/
-theorem homothety_lemma' (hfb : IsFourBall t r) (h01 : r 0 ≠ r 1)
-    (hΓ : AffineIndependent ℝ ![Z t r, N t r 0 2 1 3, N t r 0 3 1 2]) :
-    Eext t r 0 1 ∈ affineSpan ℝ {Z t r, N t r 0 2 1 3, N t r 0 3 1 2} ∧
-      (⟨_, hΓ⟩ : Affine.Triangle ℝ E3).circumsphere.power (Eext t r 0 1) =
-        r 1 / r 0 * (ball t r 0).power (Eext t r 0 1) := by
+/-- 定理 8（位似引理）：{i, j}、{k, l} 为一对对棱，Γ 是过 Z、Nᵢₖ|ⱼₗ、Nᵢₗ|ⱼₖ 的圆（假设三点不共线），
+E 是 Σₖ、Σₗ 的外位似中心（rₖ ≠ rₗ）。则 E 在 Γ 所在平面上，且 E 对 Γ 的幂等于 (rₗ/rₖ)·pow(E, Σₖ)。
+（论文的「对 Σᵢ、Σⱼ 同样成立」由交换 {i, j} 与 {k, l} 得到：Γ 不变，因为 Tₐᵦ = Tᵦₐ。） -/
+theorem homothety_lemma (hfb : IsFourBall t r) {i j k l : Fin 4} (hij : i ≠ j) (hik : i ≠ k)
+    (hil : i ≠ l) (hjk : j ≠ k) (hjl : j ≠ l) (hkl : k ≠ l) (hrkl : r k ≠ r l)
+    (hΓ : AffineIndependent ℝ ![Z t r, N t r i k j l, N t r i l j k]) :
+    Eext t r k l ∈ affineSpan ℝ {Z t r, N t r i k j l, N t r i l j k} ∧
+      (⟨_, hΓ⟩ : Affine.Triangle ℝ E3).circumsphere.power (Eext t r k l) =
+        r l / r k * (ball t r k).power (Eext t r k l) := by
   sorry
 
 /-- 定理 9（正交球引理）：{i, j}、{k, l} 为一对对棱，σ₁、σ₂ 为两个不同的 Soddy 球。经过 Tᵢⱼ 且
-与 σ₁、σ₂ 都正交的球也经过 Tₖₗ。 -/
+与 σ₁、σ₂ 都正交的球也经过 Tₖₗ。（Soddy 球为平面的情形未形式化。） -/
 theorem orthogonal_sphere (hfb : IsFourBall t r) {i j k l : Fin 4} (hij : i ≠ j) (hik : i ≠ k)
     (hil : i ≠ l) (hjk : j ≠ k) (hjl : j ≠ l) (hkl : k ≠ l) {S₁ S₂ : E3} {ρ₁ ρ₂ : ℝ}
     (h₁ : IsSoddy t r S₁ ρ₁) (h₂ : IsSoddy t r S₂ ρ₂) (hne : (S₁, ρ₁) ≠ (S₂, ρ₂))
@@ -154,7 +157,7 @@ theorem orthogonal_sphere (hfb : IsFourBall t r) {i j k l : Fin 4} (hij : i ≠ 
 /-! ## 定理 10：Soddy 五点球 -/
 
 /-- 定理 10（Soddy 五点球）：四面体不是正四面体（切长不全相等），{i, j}、{k, l} 为一对对棱，
-σ 为一个 Soddy 球，M′ 为 M 关于 σ 的反演点。则 Z、Nᵢⱼ|ₖₗ、σ 与 Σₖ、Σₗ 的切点、M′ 共球（或共面）。 -/
+σ 为一个 Soddy 球，M′ 为 M 关于 σ 的反演点。则 Z、Nᵢⱼ|ₖₗ、σ 与 Σₖ、Σₗ 的切点、M′ 共球（或共面）。（σ 为平面的情形未形式化。） -/
 theorem soddy_five_point (hfb : IsFourBall t r) (hreg : ¬ ∀ i j, r i = r j)
     {i j k l : Fin 4} (hij : i ≠ j) (hik : i ≠ k) (hil : i ≠ l) (hjk : j ≠ k) (hjl : j ≠ l)
     (hkl : k ≠ l) {S : E3} {ρs : ℝ} (hS : IsSoddy t r S ρs) :
