@@ -4,6 +4,7 @@ public import GeometryResearch.Midsphere.Defs
 public import GeometryResearch.Midsphere.Central
 public import GeometryResearch.Midsphere.Tangent
 public import GeometryResearch.Midsphere.GMPlane
+public import GeometryResearch.Midsphere.Soddy
 
 /-!
 # 棱切球四面体十一定理：形式陈述
@@ -59,16 +60,16 @@ theorem X11_faithful (hfb : IsFourBall t r) (l : Fin 4)
 Soddy 球。（保证定理 1、3、9、10 不空。） -/
 theorem exists_soddy (hfb : IsFourBall t r)
     (hplane : sInv r ^ 2 ≠ 3 * ∑ i, 1 / r i ^ 2) :
-    ∃ S₁ ρ₁ S₂ ρ₂, IsSoddy t r S₁ ρ₁ ∧ IsSoddy t r S₂ ρ₂ ∧ (S₁, ρ₁) ≠ (S₂, ρ₂) := by
-  sorry
+    ∃ S₁ ρ₁ S₂ ρ₂, IsSoddy t r S₁ ρ₁ ∧ IsSoddy t r S₂ ρ₂ ∧ (S₁, ρ₁) ≠ (S₂, ρ₂) :=
+  exists_soddy' hfb hplane
 
 /-- Soddy 球的刻画：任一满足 `IsSoddy` 的球，曲率 1/ρₛ 是 s/2 ± 3√D 之一，
 D = (s² − 2Σ1/rᵢ²)/12 为 Descartes 判别式（论文 Lemma 2.1）。与 `exists_soddy` 合起来说明
 `IsSoddy` 恰好刻画了论文的（非平面）Soddy 球。 -/
 theorem soddy_curvature (hfb : IsFourBall t r) {S : E3} {ρs : ℝ} (hS : IsSoddy t r S ρs) :
     let D := (sInv r ^ 2 - 2 * ∑ i, 1 / r i ^ 2) / 12
-    1 / ρs = sInv r / 2 + 3 * √D ∨ 1 / ρs = sInv r / 2 - 3 * √D := by
-  sorry
+    1 / ρs = sInv r / 2 + 3 * √D ∨ 1 / ρs = sInv r / 2 - 3 * √D :=
+  soddy_curvature' hfb hS
 
 /-- Fermat 点存在。 -/
 theorem exists_fermat : ∃ F, IsFermatPoint t F :=
