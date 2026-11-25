@@ -124,6 +124,8 @@ theorem interp {d F : Fin 4 → ℝ} {i j : Fin 4} (hij : d i ≠ d j) (k : Fin 
   linear_combination hm
 
 set_option linter.flexible false in
+set_option linter.unusedTactic false in
+set_option linter.unreachableTactic false in
 theorem affine_of_minors {d F : Fin 4 → ℝ} (m1 : minor3 d F 0 1 2 = 0)
     (m2 : minor3 d F 0 1 3 = 0) (m3 : minor3 d F 0 2 3 = 0) (hne : ¬ ∀ i, d i = d 0) :
     ∃ α β : ℝ, ∀ k, F k = α + β * d k := by
