@@ -5,10 +5,11 @@ public import GeometryResearch.Orthocentric.Model
 public import GeometryResearch.Orthocentric.Thirteen
 
 /-!
-# 垂心四面体五定理：形式陈述（阶段 1）
+# 垂心四面体五定理：形式陈述与证明
 
 论文：D. Zhang, *Five Theorems on the Orthocentric Tetrahedron*, Zenodo 10.5281/zenodo.23579462。
-定义见 `Defs.lean`。本文件只写陈述，所有**证明**暂时是 `sorry`。
+定义见 `Defs.lean`。16 条陈述中已证 10 条（定理 1 的证明在 `Thirteen.lean`），
+定理 2–5 的 6 条仍是 `sorry`，待逐条证明。
 -/
 
 @[expose] public noncomputable section
