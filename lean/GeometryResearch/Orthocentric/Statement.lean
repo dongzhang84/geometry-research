@@ -3,13 +3,14 @@ module
 public import GeometryResearch.Orthocentric.Defs
 public import GeometryResearch.Orthocentric.Model
 public import GeometryResearch.Orthocentric.Thirteen
+public import GeometryResearch.Orthocentric.Seven
 
 /-!
 # 垂心四面体五定理：形式陈述与证明
 
 论文：D. Zhang, *Five Theorems on the Orthocentric Tetrahedron*, Zenodo 10.5281/zenodo.23579462。
-定义见 `Defs.lean`。16 条陈述中已证 10 条（定理 1 的证明在 `Thirteen.lean`），
-定理 2–5 的 6 条仍是 `sorry`，待逐条证明。
+定义见 `Defs.lean`。16 条陈述中已证 12 条（定理 1、4 的证明分别在 `Thirteen.lean`、
+`Seven.lean`），定理 2、3、5 的 4 条仍是 `sorry`，待逐条证明。
 -/
 
 @[expose] public noncomputable section
@@ -132,20 +133,10 @@ theorem S2_eq (i : Fin 4) :
   simp only [S2, P]
   ring
 
-set_option linter.flexible false in
 /-- 中点球（论文 Lemma 2.1(d)）：六条棱的中点到 G 的距离都等于 `rMid`。 -/
 theorem dist_mid_G (ho : IsOrthocentric t) {i j : Fin 4} (hij : i ≠ j) :
-    dist (mid t i j) (G t) = rMid t := by
-  obtain ⟨h02, h03, h12, h13, h23⟩ := Alg.mid_eq (hyp t ho)
-  have key : ∀ a b : Fin 4, a < b → dist (mid t a b) (G t) = rMid t := by
-    intro a b hab
-    rw [rMid, dist_eq_norm, dist_eq_norm, mid_sub_G, mid_sub_G]
-    fin_cases a <;> fin_cases b <;> simp at hab ⊢ <;>
-      rw [← sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _), ← real_inner_self_eq_norm_sq,
-        ← real_inner_self_eq_norm_sq] <;> assumption
-  rcases lt_or_gt_of_ne hij with h | h
-  · exact key i j h
-  · rw [mid, midpoint_comm]; exact key j i h
+    dist (mid t i j) (G t) = rMid t :=
+  dist_mid_G_aux t ho hij
 
 /-! ## 定理 1：十三点球 -/
 
@@ -257,8 +248,8 @@ def Bpt (i : Fin 4) : E3 := (Ω t).secondInter (t.points i) (G t -ᵥ t.points i
 theorem seven_lines_chord (ho : IsOrthocentric t) (hH : ∀ j, H t ≠ t.points j) (i : Fin 4) :
     (Apt t i ≠ Bpt t i → Xpt t ∈ line[ℝ, Apt t i, Bpt t i]) ∧
       (Apt t i = Bpt t i → ⟪Xpt t - Apt t i, Apt t i - O t⟫ = 0) ∧
-      ⟪Apt t i - Xpt t, Bpt t i - Xpt t⟫ = (Ω t).power (Xpt t) := by
-  sorry
+      ⟪Apt t i - Xpt t, Bpt t i - Xpt t⟫ = (Ω t).power (Xpt t) :=
+  chord_main t ho hH i
 
 /-- 定理 4（七线共点），三条直线 ψ(mᵢⱼ)ψ(mₖₗ) 部分（{i, j}、{k, l} 是一对对棱）：
 ψ(mᵢⱼ) ≠ ψ(mₖₗ)（直线不退化），X 在这条直线上，且 ⟪Xψ(mᵢⱼ), Xψ(mₖₗ)⟫ = X 对中点球的幂。
@@ -267,8 +258,8 @@ theorem seven_lines_midpoint (ho : IsOrthocentric t) (hH : ∀ j, H t ≠ t.poin
     {i j k l : Fin 4} (hij : i ≠ j) (hik : i ≠ k) (hil : i ≠ l) (hjk : j ≠ k) (hjl : j ≠ l)
     (hkl : k ≠ l) :
     ψ t (mid t i j) ≠ ψ t (mid t k l) ∧ Xpt t ∈ line[ℝ, ψ t (mid t i j), ψ t (mid t k l)] ∧
-      ⟪ψ t (mid t i j) - Xpt t, ψ t (mid t k l) - Xpt t⟫ = powMid t (Xpt t) := by
-  sorry
+      ⟪ψ t (mid t i j) - Xpt t, ψ t (mid t k l) - Xpt t⟫ = powMid t (Xpt t) :=
+  midline_main t ho hH hij hik hil hjk hjl hkl
 
 /-! ## 定理 5：Fermat 点的共线 -/
 
