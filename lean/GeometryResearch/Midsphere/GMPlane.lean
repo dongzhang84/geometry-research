@@ -77,7 +77,7 @@ theorem gm_main (hfb : IsFourBall t r) {P : E3} (hP : P ∈ line[ℝ, G t, M t r
   · -- P = G：Pᵗ = G
     have hpG : ofWeights t (fun i => 1 / p i) = G t := by
       rw [G_eq, show (fun i => 1 / p i) = (fun _ => 4 * 1) by
-        funext i; simp [p, β, α, hu], ofW_smul t 4 (by norm_num) (fun _ => 1)]
+        funext i; simp [p, hu], ofW_smul t 4 (by norm_num) (fun _ => 1)]
     rw [hpG]
     exact (coplanar_triple (k := ℝ) (G t) (M t r) (ofWeights t (fun i => S2 t i / p i))).subset
       (by intro z hz; simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hz ⊢; tauto)

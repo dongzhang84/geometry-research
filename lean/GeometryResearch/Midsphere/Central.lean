@@ -41,6 +41,7 @@ theorem linIndep_w : LinearIndependent ℝ (fun k : Fin 3 => w t k.succ) := by
   have := h.comp _ hinj
   simpa [w, Function.comp_def] using this
 
+set_option linter.flexible false in
 /-- Gram 行列式 = 48·D·Π rᵢ²，而 Gram 矩阵正定，所以 D > 0。 -/
 theorem D_pos (hfb : IsFourBall t r) : 0 < Ddisc r := by
   have hr := hfb.1
@@ -48,7 +49,7 @@ theorem D_pos (hfb : IsFourBall t r) : 0 < Ddisc r := by
   have hdet := hpd.det_pos
   rw [Matrix.det_fin_three] at hdet
   simp only [Matrix.gram, inner_w hfb] at hdet
-  simp only [g, e, Fin.succ_zero_eq_one, Fin.succ_one_eq_two] at hdet
+  simp only [g, e] at hdet
   simp at hdet
   have h0 := hr 0; have h1 := hr 1; have h2 := hr 2; have h3 := hr 3
   have hP : 0 < (r 0 * r 1 * r 2 * r 3) ^ 2 := by positivity
@@ -211,7 +212,7 @@ theorem S_eq (hfb : IsFourBall t r) {S : E3} {ρs : ℝ} (hS : IsSoddy t r S ρs
     field_simp
     ring
 
-theorem M_comb (hfb : IsFourBall t r) :
+theorem M_comb :
     M t r = ofWeights t (fun i => 0 * 1 + (sInv r / 2) * (1 / r i) + (-1) * (1 / r i ^ 2)) := by
   simp only [M]; congr 1; funext i; ring
 
@@ -258,12 +259,12 @@ theorem central_main (hfb : IsFourBall t r) :
   have hP : 0 < ∏ j, r j := Finset.prod_pos (fun j _ => hr j)
   have hgt := sr_s_gt hfb
   have mG := mem_plane hfb (X := G t) 1 0 0 (by simp) G_comb
-  have mZ := mem_plane hfb (X := Z t r) 0 1 0 (by simp; exact hs.ne') Z_comb
+  have mZ := mem_plane hfb (X := Z t r) 0 1 0 (by simpa using hs.ne') Z_comb
   have mM := mem_plane hfb (X := M t r) 0 (sInv r / 2) (-1)
     (by
       have : 4 * 0 + sInv r / 2 * sInv r + -1 * qInv r = 6 * Ddisc r := by
         simp only [Ddisc]; ring
-      rw [this]; positivity) (M_comb hfb)
+      rw [this]; positivity) M_comb
   have mK := mem_plane hfb (X := K t) (-(∏ j, r j)) ((∏ j, r j) * ∑ j, r j) 0
     (by
       have : 4 * -(∏ j, r j) + (∏ j, r j) * (∑ j, r j) * sInv r + 0 * qInv r =
@@ -276,7 +277,8 @@ theorem central_main (hfb : IsFourBall t r) :
       exact mul_ne_zero four_ne_zero (div_ne_zero (mul_ne_zero (by norm_num) hD.ne') hsr.ne'))
     (O_eq hfb)
   have hG : G t ∈ ({G t, O t, K t, M t r, Z t r} : Set E3) := Set.mem_insert _ _
-  refine ⟨GeometryResearch.Orthocentric.coplanar_of_span hG (Z t r - G t) (Y t r - G t) (fun X hX => ?_),
+  refine ⟨GeometryResearch.Orthocentric.coplanar_of_span hG (Z t r - G t) (Y t r - G t)
+    (fun X hX => ?_),
     fun S ρs hS => ?_⟩
   · simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hX
     rcases hX with rfl | rfl | rfl | rfl | rfl
@@ -287,7 +289,8 @@ theorem central_main (hfb : IsFourBall t r) :
           -12 * Ddisc r by simp only [Ddisc]; ring]
         exact mul_ne_zero (by norm_num) hD.ne') (S_eq hfb hS)
     have hG' : G t ∈ ({G t, O t, K t, M t r, Z t r, S} : Set E3) := Set.mem_insert _ _
-    refine GeometryResearch.Orthocentric.coplanar_of_span hG' (Z t r - G t) (Y t r - G t) (fun X hX => ?_)
+    refine GeometryResearch.Orthocentric.coplanar_of_span hG' (Z t r - G t) (Y t r - G t)
+      (fun X hX => ?_)
     simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hX
     rcases hX with rfl | rfl | rfl | rfl | rfl | rfl
     exacts [mG, mO, mK, mM, mZ, mS]

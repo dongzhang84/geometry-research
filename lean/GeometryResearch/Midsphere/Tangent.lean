@@ -32,7 +32,7 @@ theorem M_power (hfb : IsFourBall t r) (i : Fin 4) :
     simp only [Fin.sum_univ_four, sInv, qInv, Ddisc]; ring
   have hσ : 6 * Ddisc r ≠ 0 := mul_ne_zero (by norm_num) hD
   have eM := ofW_sub_V0 t _ (by rw [hsum]; exact hσ)
-  rw [hsum, ← M_comb hfb] at eM
+  rw [hsum, ← M_comb] at eM
   have hw : ‖w t i‖ ^ 2 = g r i i := by rw [← real_inner_self_eq_norm_sq, inner_w hfb]
   have key : ⟪M t r - t.points 0, w t i⟫ = (g r i i - r i ^ 2 + r 0 ^ 2) / 2 := by
     rw [eM, real_inner_smul_left, inner_Lw hfb, one_div_mul_eq_div, div_eq_iff hσ]
