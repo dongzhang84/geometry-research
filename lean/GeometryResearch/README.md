@@ -1,5 +1,7 @@
 # 四面体定理的 Lean 形式化
 
+[![Lean](https://github.com/dongzhang84/geometry-research/actions/workflows/lean.yml/badge.svg)](https://github.com/dongzhang84/geometry-research/actions/workflows/lean.yml)
+
 这个目录用 Lean 4 + Mathlib 证明了三篇论文中关于四面体的 **17 条主定理**。证明全部由 Lean 的内核逐步检查，不依赖任何未经证明的假设。
 
 | 部分 | 论文 | 主定理 | 形式陈述 | 状态 |
@@ -97,7 +99,7 @@ Lean 只保证「从定义推出结论」，保证不了定义就是论文里的
 
 ## 怎样确认它们都通过了检测
 
-在 `lean/` 目录下运行：
+每次改动 `lean/` 并 push，GitHub Actions 都会在干净的机器上重跑下面的检测（工作流 `.github/workflows/lean.yml`），结果就是页首的徽章。本地在 `lean/` 目录下运行：
 
 ```sh
 ./check.sh
