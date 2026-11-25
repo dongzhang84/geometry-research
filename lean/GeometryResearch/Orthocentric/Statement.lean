@@ -5,6 +5,7 @@ public import GeometryResearch.Orthocentric.Model
 public import GeometryResearch.Orthocentric.Thirteen
 public import GeometryResearch.Orthocentric.Seven
 public import GeometryResearch.Orthocentric.Conj
+public import GeometryResearch.Orthocentric.Fermat
 
 /-!
 # 垂心四面体五定理：形式陈述与证明
@@ -271,13 +272,16 @@ theorem seven_lines_midpoint (ho : IsOrthocentric t) (hH : ∀ j, H t ≠ t.poin
 
 /-! ## 定理 5：Fermat 点的共线 -/
 
+-- 证明没有用到 hO（O 不在任何面所在平面上）：这个假设取自论文第 6 节（使 O 的重心坐标有限），
+-- 为忠实于论文保留在陈述里。
+set_option linter.unusedVariables false in
 /-- 定理 5：F 是 Fermat 点，W 的重心坐标为 (a₀/d₀² : … : a₃/d₃²)，dᵢ = |FVᵢ|。
 在论文第 6 节的假设下（F、H 都不是顶点，O 不在任何面所在平面上，F ≠ O，Σ aᵢ/dᵢ² ≠ 0），
 F、O、W 共线。 -/
 theorem fermat_collinear (ho : IsOrthocentric t) {F : E3} (hF : IsFermatPoint t F)
     (hFv : ∀ j, F ≠ t.points j) (hH : ∀ j, H t ≠ t.points j) (hO : ∀ j, bary t (O t) j ≠ 0)
     (hFO : F ≠ O t) (hW : ∑ j, a t j / dist F (t.points j) ^ 2 ≠ 0) :
-    Collinear ℝ ({F, O t, ofWeights t (fun j => a t j / dist F (t.points j) ^ 2)} : Set E3) := by
-  sorry
+    Collinear ℝ ({F, O t, ofWeights t (fun j => a t j / dist F (t.points j) ^ 2)} : Set E3) :=
+  fermat_main t ho hF hFv hH hFO hW
 
 end GeometryResearch.Orthocentric
