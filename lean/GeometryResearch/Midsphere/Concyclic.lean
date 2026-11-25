@@ -309,7 +309,7 @@ theorem alg4 {e1 e2 e3 e4 OG OM GM OK KM GK R2 ρ2 : ℝ}
 theorem plane_span {S : Set E3} {Op Mp Gp X : E3} (hcop : Coplanar ℝ S) (hO : Op ∈ S)
     (hM : Mp ∈ S) (hG : Gp ∈ S) (hli : LinearIndependent ℝ ![Mp - Op, Gp - Op]) (hX : X ∈ S) :
     X - Op ∈ Submodule.span ℝ (Set.range ![Mp - Op, Gp - Op]) := by
-  haveI := hcop.finiteDimensional_vectorSpan
+  have := hcop.finiteDimensional_vectorSpan
   have hle : Submodule.span ℝ (Set.range ![Mp - Op, Gp - Op]) ≤ vectorSpan ℝ S := by
     rw [Submodule.span_le]
     rintro z ⟨m, rfl⟩
