@@ -61,8 +61,7 @@ GeometryResearch/Orthocentric/
   汇报_阶段1.md                     汇报（陈述、审查、三批证明）
 GeometryResearch/Midsphere/        棱切球四面体（19 条陈述全部证完，见 Midsphere/汇报.md）
   Defs.lean、Statement.lean        定义与 19 条陈述
-  Model.lean、Faith.lean、Central.lean、Tangent.lean、GMPlane.lean、Soddy.lean、Orth.lean、
-  Homothety.lean                   已证部分的证明
+  其余 .lean                       各定理的证明
   numeric_check.py                 陈述的数值核对（笛卡儿坐标）
 GeometryResearch/Basic.lean        模板自带的空文件
 ```
@@ -70,10 +69,10 @@ GeometryResearch/Basic.lean        模板自带的空文件
 ## 检查
 
 ```sh
-lake build
+./check.sh
 ```
 
-应当零错误、零警告、零 `sorry`。七点球的七个定理、垂心四面体的 16 条陈述都已证明，`#print axioms` 只显示 `propext`、`Classical.choice`、`Quot.sound` 三条标准公理。
+编译、搜索自定义公理，并对三个 `Statement.lean` 的 43 条定理运行 `#print axioms`。应当零错误、零警告，每条只依赖 `propext`、`Classical.choice`、`Quot.sound`。形式化了什么、怎样检测，见 [GeometryResearch/README.md](GeometryResearch/README.md)。
 
 ## 配置说明
 
