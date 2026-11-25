@@ -7,7 +7,7 @@ public import GeometryResearch.Midsphere.GMPlane
 public import GeometryResearch.Midsphere.Soddy
 public import GeometryResearch.Midsphere.Orth
 public import GeometryResearch.Midsphere.Homothety
-public import GeometryResearch.Midsphere.FivePoint
+public import GeometryResearch.Midsphere.Eight
 
 /-!
 # 棱切球四面体十一定理：形式陈述
@@ -105,8 +105,8 @@ theorem eight_point_sphere (hfb : IsFourBall t r) {S₁ S₂ : E3} {ρ₁ ρ₂ 
     (h₁ : IsSoddy t r S₁ ρ₁) (h₂ : IsSoddy t r S₂ ρ₂) (hne : (S₁, ρ₁) ≠ (S₂, ρ₂)) :
     MCospherical ({T t r 0 1, T t r 0 2, T t r 1 3, T t r 2 3,
       soddyPt t r S₁ ρ₁ 1, soddyPt t r S₁ ρ₁ 2, soddyPt t r S₂ ρ₂ 0, soddyPt t r S₂ ρ₂ 3} :
-        Set E3) := by
-  sorry
+        Set E3) :=
+  eight_main hfb h₁ h₂ hne
 
 /-! ## 定理 4：中心平面上的四点共圆 -/
 
