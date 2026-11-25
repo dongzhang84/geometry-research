@@ -61,6 +61,20 @@ theorem X11_faithful (hfb : IsFourBall t r) (l : Fin 4)
       dist (X11 t r l) (Ipt t l) = (t.faceOpposite l).inradius :=
   X11_main hfb l hne
 
+/-- 外位似中心的忠实性：rₖ ≠ rₗ 时，以 `Eext` 为中心、比 rₗ/rₖ > 0 的位似把 Vₖ 映到 Vₗ，
+把半径 rₖ 变成 rₗ，即把 Σₖ 映成 Σₗ（比为正，所以是外位似中心）。 -/
+theorem Eext_spec (hfb : IsFourBall t r) {k l : Fin 4} (hkl : r k ≠ r l) :
+    0 < r l / r k ∧ AffineMap.homothety (Eext t r k l) (r l / r k) (t.points k) = t.points l ∧
+      r l / r k * r k = r l := by
+  have hk := (hfb.1 k).ne'
+  have hd : r l - r k ≠ 0 := sub_ne_zero.mpr (Ne.symm hkl)
+  refine ⟨div_pos (hfb.1 l) (hfb.1 k), ?_, by field_simp⟩
+  simp only [AffineMap.homothety_apply, Eext, AffineMap.lineMap_apply, vsub_eq_sub, vadd_eq_add]
+  have e : t.points l = (t.points l - t.points k) + t.points k := by abel
+  set v := t.points l - t.points k
+  rw [e]
+  match_scalars <;> field_simp <;> ring
+
 /-- Soddy 球存在：当两个曲率 s/2 ± 3√D 都不为 0（没有 Soddy 球退化为平面）时，有两个不同的
 Soddy 球。（保证定理 1、3、9、10 不空。） -/
 theorem exists_soddy (hfb : IsFourBall t r)

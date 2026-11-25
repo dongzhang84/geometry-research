@@ -59,8 +59,8 @@ GeometryResearch/Orthocentric/
   fermat_cert.sing                 生成定理 5 证书的 Singular 脚本
   numeric_check.py                 陈述的数值核对
   汇报_阶段1.md                     汇报（陈述、审查、三批证明）
-GeometryResearch/Midsphere/        棱切球四面体（19 条陈述全部证完，见 Midsphere/汇报.md）
-  Defs.lean、Statement.lean        定义与 19 条陈述
+GeometryResearch/Midsphere/        棱切球四面体（20 条陈述全部证完，见 Midsphere/汇报.md）
+  Defs.lean、Statement.lean        定义与 20 条陈述
   其余 .lean                       各定理的证明
   numeric_check.py                 陈述的数值核对（笛卡儿坐标）
 GeometryResearch/Basic.lean        模板自带的空文件
@@ -72,7 +72,7 @@ GeometryResearch/Basic.lean        模板自带的空文件
 ./check.sh
 ```
 
-编译、搜索自定义公理，并对三个 `Statement.lean` 的 43 条定理运行 `#print axioms`。应当零错误、零警告，每条只依赖 `propext`、`Classical.choice`、`Quot.sound`。形式化了什么、怎样检测，见 [GeometryResearch/README.md](GeometryResearch/README.md)。
+编译、搜索自定义公理，并对三个 `Statement.lean` 的 44 条定理运行 `#print axioms`。应当零错误、零警告，每条只依赖 `propext`、`Classical.choice`、`Quot.sound`。形式化了什么、怎样检测，见 [GeometryResearch/README.md](GeometryResearch/README.md)。
 
 ## 配置说明
 
